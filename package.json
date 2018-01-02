@@ -3,8 +3,11 @@
   "private": true,
   "dependencies": {
     "expo": "^24.0.0",
+    "install": "^0.10.2",
+    "prop-types": "^15.6.0",
     "react": "16.0.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "react-native-blink-view": "0.0.5",
     "react-native-slider": "^0.11.0",
     "react-native-ui-kitten": "^2.0.1",
     "render-if": "^0.1.1"

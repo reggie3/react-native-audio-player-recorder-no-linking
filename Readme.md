@@ -46,7 +46,7 @@ This component accepts the following props:
 | timeStampStyle | object | no | <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | style of the timestamp displayed while playing and recording |
 | showTimeStamp | boolean | no | true |determines whether or not to display timestamp |
 
-# Sound Clip information returned by this component
+### Sound Clip information returned by this component
 The onComplete callback receives an object similiar to the following
 ~~~
 {

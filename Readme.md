@@ -40,14 +40,6 @@ This component accepts the following props:
 |onComplete|function | yes| none| callback function executed when the user presses the finish recording button.  Is passed sound file information (see below)|
 |maxDurationMillis|number| no | 999999999999 | maximum length of the recording in milliseconds|
 |completeButtonText| string| no | finished | text dsplayed on the button that executes the onComplete callback|
-|audioMode| object | no |  ~~~allowsRecordingIOS: false,
-interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-playsInSilentModeIOS: true,
-playsInSilentLockedModeIOS: true,
-shouldDuckAndroid: true,
-interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX~~~| an set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html)|
-|timeStampStyle| object | no |  ~~~{
-    color: 'blue',
-    fontSize: 40
-}~~~ | style of the timestamp displayed while playing and recording|
+|audioMode| object | no |  | an set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html)|
+|timeStampStyle| object | no |  | style of the timestamp displayed while playing and recording|
 |showTimeStamp|boolean|no|true|determines whether or not to display timestamp|

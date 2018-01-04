@@ -41,8 +41,7 @@ This component accepts the following props:
 | onComplete              | function | yes | none | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below) |
 | maxDurationMillis | number| no | 600000 (10 miniutes) | maximum length of the recording in milliseconds |
 | completeButtonText | string| no | finished | text dsplayed on the button that executes the onComplete callback |
-| audioMode | object | no |```
-allowsRecordingIOS: false,
+| audioMode | object | no |```allowsRecordingIOS: false,
     interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
     playsInSilentModeIOS: true,
     playsInSilentLockedModeIOS: true,

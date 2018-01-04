@@ -1,27 +1,84 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import SoundRecorder from './SoundRecorder';
 import { Constants } from 'expo';
-import { RkButton, RkText } from 'react-native-ui-kitten';
-
+import { RkButton } from 'react-native-ui-kitten';
+import renderIf from 'render-if';
 
 export default class App extends Component {
-  soundRecorderComplete = audioFileInfo => {
-    console.log(audioFileInfo);
-    debugger;
+  constructor(props) {
+    super(props);
+    this.state = {
+      soundFileInfo: 'sound file information will appear here',
+      viewToShow: 'home'
+    };
+  }
+
+  showRecorder = () => {
+    this.setState({ viewToShow: 'recorder' });
+  };
+  soundRecorderComplete = (soundFileInfo, a, b, c) => {
+    soundFileInfo =
+      typeof soundFileInfo === 'object'
+        ? JSON.stringify(soundFileInfo, undefined, 2)
+        : soundFileInfo;
+
+    this.setState({
+      viewToShow: 'home',
+      soundFileInfo
+    });
   };
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.statusBar} />
-        <RkText style={{margin: 10}}
-        rkType='xxlarge'>Sound Recorder App</RkText>
-        <SoundRecorder
-          onComplete={this.soundRecorderComplete}
-          maxDurationMillis={150000}
-          completeButtonText={'Finished'}
-        />
+        <Text
+          style={{
+            margin: 10,
+            fontSize: 24,
+            color: 'black'
+          }}
+        >
+          Sound Recorder App
+        </Text>
+        {renderIf(this.state.viewToShow === 'recorder')(
+          <SoundRecorder
+            style={{ flex: 1 }}
+            onComplete={this.soundRecorderComplete.bind(this)}
+            maxDurationMillis={150000}
+            completeButtonText={'Finished'}
+          />
+        )}
+        {renderIf(this.state.viewToShow === 'home')(
+          <View
+            style={{
+              flex: 1,
+              margin: 10,
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                flex: 1,
+                display: 'flex',
+                alignSelf: 'center',
+                color: 'darkblue'
+              }}
+            >
+              {this.state.soundFileInfo}
+            </Text>
+            <RkButton
+              rkType="stretch"
+              onPress={this.showRecorder.bind(this)}
+              style={{ marginVertical: 5 }}
+            >
+              Record Sound
+            </RkButton>
+          </View>
+        )}
       </View>
     );
   }

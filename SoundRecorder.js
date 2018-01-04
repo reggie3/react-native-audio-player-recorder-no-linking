@@ -638,15 +638,11 @@ export default class SoundRecorder extends Component {
 }
 
 SoundRecorder.propTypes = {
-  audioMode: PropTypes.object,
   onComplete: PropTypes.func,
   maxDurationMillis: PropTypes.number,
   completeButtonText: PropTypes.string,
   audioMode: PropTypes.object,
-  completeButtonText: PropTypes.string,
   timeStampStyle: PropTypes.object,
-  playButtonStyle: PropTypes.object,
-  RecordingButtonStyle: PropTypes.object,
   showTimeStamp: PropTypes.bool
 };
 
@@ -654,7 +650,7 @@ SoundRecorder.defaultProps = {
   audioMode: defaultProps.audioMode,
   completeButtonText: defaultProps.completeButtonText,
   prepareToRecordParams: defaultProps.prepareToRecordParams,
-  maxDurationMillis: 999999999999999,
+  maxDurationMillis: 999999999999,
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true
 };

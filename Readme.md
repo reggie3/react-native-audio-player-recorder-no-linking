@@ -35,9 +35,9 @@ This package can be used to create both an editor and a viewer
 ~~~
 
 This component accepts the following props:
-| Name                   | type |Required | Default    | Description |
-| ---------------------- | ------------- | ----------- |
-|onComplete|function | yes| none| callback function executed when the user presses the finish recording button.  Is passed sound file information (see below)|
+| Name                   | type | Required | Default | Description |
+| ---------------------- | ---- | -------- | ------- | ----------- | 
+|onComplete              |function | yes| none| callback function executed when the user presses the finish recording button.  Is passed sound file information (see below)|
 |maxDurationMillis|number| no | 999999999999 | maximum length of the recording in milliseconds|
 |completeButtonText| string| no | finished | text dsplayed on the button that executes the onComplete callback|
 |audioMode| object | no |  | an set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html)|

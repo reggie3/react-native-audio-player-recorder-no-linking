@@ -650,7 +650,7 @@ SoundRecorder.defaultProps = {
   audioMode: defaultProps.audioMode,
   completeButtonText: defaultProps.completeButtonText,
   prepareToRecordParams: defaultProps.prepareToRecordParams,
-  maxDurationMillis: 999999999999,
+  maxDurationMillis: 600000,
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true
 };

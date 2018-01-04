@@ -51,7 +51,9 @@ The onComplete callback receives an object similiar to the following
 ~~~
 {
     "size":115824,
-    "modificationTime":1515107376,"uri":"file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540reggie3%252Freact-native-expo-sound-recorder/Audio/recording-20cfc766-faba-47cf-9914-8fc81b149012.m4a","isDirectory":false,
+    "modificationTime":1515107376,
+    "uri":"file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540reggie3%252Freact-native-expo-sound-recorder/Audio/recording-20cfc766-faba-47cf-9914-8fc81b149012.m4a",
+    "isDirectory":false,
     "exists":true,
     "durationMillis": 34535
 }

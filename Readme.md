@@ -18,7 +18,7 @@ You are not restricted from using native code, and can find a better module to u
 
 ## Installation
 
-npm install --save react-native-sound-recorder-no-native
+`npm install --save react-native-sound-recorder-no-native`
 
 ## Usage
 

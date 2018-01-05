@@ -191,7 +191,6 @@ export default class SoundRecorder extends Component {
       playbackStatus: '',
       recordingDuration: null,
       soundDuration: null,
-      // soundPosition: null,
       maxSliderValue: 0,
       currentSliderValue: 0,
       soundFileInfo: 'make a recording to see its information'
@@ -227,17 +226,12 @@ export default class SoundRecorder extends Component {
       } else if (status.isBuffering === true) {
         updatedPlaybackStatus = 'buffering';
       } else {
-        debugger;
+        // console.log('unknown status');
       }
-
-      // console.log(`------ setting ${updatedPlaybackStatus} -------`);
 
       // console.log('status.positionMillis: ', status.positionMillis);
       this.setState({
-        // durationMillis: status.durationMillis,
         maxSliderValue: status.durationMillis,
-        // soundDuration: status.durationMillis,
-        // soundPosition: status.positionMillis,
         positionMillis: status.positionMillis,
         currentSliderValue: status.positionMillis,
         shouldPlay: status.shouldPlay,
@@ -252,7 +246,6 @@ export default class SoundRecorder extends Component {
     } else {
       this.setState({
         soundDuration: null,
-        // soundPosition: null,
         isPlaybackAllowed: false
       });
 
@@ -297,11 +290,10 @@ export default class SoundRecorder extends Component {
     if (this.sound !== null) {
       try {
         await this.sound.unloadAsync().then(() => {
-          console.log('******** sound unloaded ********');
+          // console.log('******** sound unloaded ********');
         });
       } catch (error) {
-        debugger;
-        console.log('Error: unloadAsync ', error);
+        // console.log('Error: unloadAsync ', error);
       }
       this.sound.setOnPlaybackStatusUpdate(null);
       this.sound = null;
@@ -314,8 +306,7 @@ export default class SoundRecorder extends Component {
         this.recording = null;
       }
     } catch (error) {
-      debugger;
-      console.log('Error: setAudioModeAsync ', error);
+      // console.log('Error: setAudioModeAsync ', error);
     }
 
     const recording = new Audio.Recording();
@@ -324,8 +315,7 @@ export default class SoundRecorder extends Component {
       await recording.setProgressUpdateInterval(100);
       await recording.startAsync(); // Will call this._updateScreenForRecordingStatus to update the screen.
     } catch (error) {
-      debugger;
-      console.log('Error: startAsync: ', error);
+      // console.log('Error: startAsync: ', error);
     }
     this.setState({ maxSliderValue: this.props.maxDurationMillis });
     recording.setOnRecordingStatusUpdate(this.updateScreenForRecordingStatus);
@@ -348,23 +338,22 @@ export default class SoundRecorder extends Component {
       await this.recording.stopAndUnloadAsync();
       console.log(' +++ unloading +++');
     } catch (error) {
-      debugger;
-      console.log('Error: stopAndUnloadAsync', error);
+      // console.log('Error: stopAndUnloadAsync', error);
     }
 
     let info;
     try {
       info = await FileSystem.getInfoAsync(this.recording.getURI());
     } catch (error) {
-      console.log('Error: FileSystem.getInfoAsync', error);
+      // console.log('Error: FileSystem.getInfoAsync', error);
     }
 
-    console.log(`FILE INFO: ${JSON.stringify(info)}`);
+    // console.log(`FILE INFO: ${JSON.stringify(info)}`);
 
     try {
       await Audio.setAudioModeAsync(this.props.audioMode);
     } catch (error) {
-      console.log('Error: Audio.setAudioModeAsync', error);
+      // console.log('Error: Audio.setAudioModeAsync', error);
     }
 
     // now that recording is complete, create and load a new sound object
@@ -388,8 +377,7 @@ export default class SoundRecorder extends Component {
       });
       this.sound = sound;
     } catch (error) {
-      debugger;
-      console.log('Error: createNewLoadedSound', error);
+      // console.log('Error: createNewLoadedSound', error);
     }
     this.setState({
       isLoading: false
@@ -521,18 +509,27 @@ export default class SoundRecorder extends Component {
 
   // perform this action when the user presses the "done" key
   onComplete = async () => {
-    debugger;
-    try {
-      await this.sound.unloadAsync().then(() => {
-        console.log('******** sound unloaded ********');
-        this.props.onComplete(this.state.soundFileInfo);
-      });
-    } catch (error) {
-      debugger;
-      console.log('Error: unloadAsync ', error);
+    // need to check if sound has been set to null in case the user 
+    // has recorded soemthing, then did a reset, and then clicks the finish button
+    if (this.sound !== null) {
+      try {
+        await this.sound.unloadAsync().then(() => {
+          // console.log('******** sound unloaded ********');
+          this.props.onComplete(this.state.soundFileInfo);
+        });
+      } catch (error) {
+        console.log('Error: unloadAsync ', error);
+      }
+      // clear the status update object if the sound hasn't already been set to null
+      if (this.sound.hasOwnProperty('setOnPlaybackStatusUpdate')) {
+        this.sound.setOnPlaybackStatusUpdate(null);
+      }
+      this.sound = null;
+    } else {
+      // only get here if the user has never tried to click record or 
+      // did a reset
+      this.props.onComplete(this.state.soundFileInfo);
     }
-    this.sound.setOnPlaybackStatusUpdate(null);
-    this.sound = null;
   };
 
   onSliderValueChange = value => {
@@ -561,13 +558,13 @@ export default class SoundRecorder extends Component {
         if (this.state.positionMillis === this.state.durationMillis) {
           this.sound.stopAsync().then(() => {
             this.sound.playAsync().then(() => {
-              debugger;
+              this.setState({ isPlaying: true, playbackStatus: 'playing' });
             });
           });
         } else {
           // just play from wherever we are
           this.sound.playAsync().then(() => {
-            debugger;
+            this.setState({ isPlaying: true, playbackStatus: 'playing' });
           });
         }
       } else if (this.state.playbackStatus === 'paused') {
@@ -575,10 +572,10 @@ export default class SoundRecorder extends Component {
           this.setState({ isPlaying: true, playbackStatus: 'playing' });
         });
       } else {
-        console.log(
+        /* console.log(
           'Error onPlayPausePressed: unhandled state.playbackStatus = ',
           this.state.playbackStatus
-        );
+        ); */
       }
     }
   };

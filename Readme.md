@@ -1,7 +1,7 @@
 # React Native Sound Recorder (No Native)
 
 ## A simple drop in sound recorder component for react native applications.  
-This module makes extensive use of the Expo.io Audio SDK located [here](https://https://docs.expo.io/versions/latest/sdk/audio.html).  It includes a sensible set of audio setup defaults, but can be customised using the information contained in the expo.io documentation.
+This module makes extensive use of the Expo.io Audio SDK located [here](https://docs.expo.io/versions/latest/sdk/audio.html).  It includes a sensible set of audio setup defaults, but can be customised using the information contained in the expo.io documentation.
 
 [![npm](https://img.shields.io/npm/v/react-native-sound-recorder-no-native.svg)](https://www.npmjs.com/package/react-native-sound-recorder-no-native)
 [![npm](https://img.shields.io/npm/dm/react-native-sound-recorder-no-native.svg)](https://www.npmjs.com/package/react-native-sound-recorder-no-native)

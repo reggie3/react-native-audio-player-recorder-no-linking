@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
 import { RkButton, RkStyleSheet } from 'react-native-ui-kitten';
 import { FontAwesome } from '@expo/vector-icons';
 import Expo, { Audio, FileSystem, Permissions } from 'expo';
@@ -46,7 +46,7 @@ const GetRecordingButtonByStatus = props => {
 };
 
 const GetPlayButtonByStatus = props => {
-  // console.log(props.playbackStatus, ' - rendering play button');
+  
   if (!props.isRecordingComplete) {
     return (
       <View>
@@ -55,9 +55,7 @@ const GetPlayButtonByStatus = props => {
             styles.roundButton,
             { backgroundColor: 'gray', paddingLeft: 25 }
           ]}
-          onPress={() => {
-            console.log('do nothing');
-          }}
+          onPress={() => {}}
         >
           <FontAwesome name="play" color="white" size={75} />
         </RkButton>
@@ -209,9 +207,11 @@ export default class SoundRecorder extends Component {
     this.componentIsMounted = true;
   }
 
-  addDebugStatement = (statement)=>{
-    this.setState({debugStatements: this.state.debugStatements.concat(`${statement}\n`)})
-  }
+  addDebugStatement = statement => {
+    this.setState({
+      debugStatements: this.state.debugStatements.concat(`- ${statement}\n`)
+    });
+  };
 
   askForPermissions = async () => {
     const response = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
@@ -233,10 +233,10 @@ export default class SoundRecorder extends Component {
       } else if (status.isBuffering === true) {
         updatedPlaybackStatus = 'buffering';
       } else {
-        // console.log('unknown status');
+        this.addDebugStatement('unknown status in updateScreenForSoundStatus');
       }
 
-      // console.log('status.positionMillis: ', status.positionMillis);
+      this.addDebugStatement(`status.positionMillis: ${status.positionMillis}`);
       this.setState({
         maxSliderValue: status.durationMillis,
         positionMillis: status.positionMillis,
@@ -257,7 +257,7 @@ export default class SoundRecorder extends Component {
       });
 
       if (status.error) {
-        console.log(`FATAL PLAYER ERROR: ${status.error}`);
+        this.addDebugStatement(`FATAL PLAYER ERROR: ${status.error}`);
       }
     }
     //  }
@@ -271,14 +271,14 @@ export default class SoundRecorder extends Component {
         recordingDuration: status.durationMillis,
         currentSliderValue: status.durationMillis
       });
-      // console.log('canRecord: ', status.durationMillis);
+      this.addDebugStatement(`canRecord: ${status.durationMillis}`);
     } else if (status.isDoneRecording) {
       this.setState({
         isRecording: false,
         recordingDuration: status.durationMillis,
         isRecordingComplete: true
       });
-      // console.log('isDoneRecording: ', status.durationMillis);
+      this.addDebugStatement(`isDoneRecording: ${status.durationMillis}`);
 
       if (!this.state.isLoading) {
         this.stopRecordingAndEnablePlayback();
@@ -297,10 +297,10 @@ export default class SoundRecorder extends Component {
     if (this.sound !== null) {
       try {
         await this.sound.unloadAsync().then(() => {
-          // console.log('******** sound unloaded ********');
+          this.addDebugStatement('******** sound unloaded ********');
         });
       } catch (error) {
-        // console.log('Error: unloadAsync ', error);
+        this.addDebugStatement(`Error: unloadAsync ${error}`);
       }
       this.sound.setOnPlaybackStatusUpdate(null);
       this.sound = null;
@@ -313,7 +313,7 @@ export default class SoundRecorder extends Component {
         this.recording = null;
       }
     } catch (error) {
-      // console.log('Error: setAudioModeAsync ', error);
+      this.addDebugStatement(`Error: setAudioModeAsync ${error}`);
     }
 
     const recording = new Audio.Recording();
@@ -322,7 +322,7 @@ export default class SoundRecorder extends Component {
       await recording.setProgressUpdateInterval(100);
       await recording.startAsync(); // Will call this._updateScreenForRecordingStatus to update the screen.
     } catch (error) {
-      // console.log('Error: startAsync: ', error);
+      this.addDebugStatement(`Error: startAsync: ${error}`);
     }
     this.setState({ maxSliderValue: this.props.maxDurationMillis });
     recording.setOnRecordingStatusUpdate(this.updateScreenForRecordingStatus);
@@ -343,24 +343,24 @@ export default class SoundRecorder extends Component {
     });
     try {
       await this.recording.stopAndUnloadAsync();
-      console.log(' +++ unloading +++');
+      this.addDebugStatement(' +++ unloading +++');
     } catch (error) {
-      // console.log('Error: stopAndUnloadAsync', error);
+      this.addDebugStatement(`Error: stopAndUnloadAsync ${error}`);
     }
 
     let info;
     try {
       info = await FileSystem.getInfoAsync(this.recording.getURI());
     } catch (error) {
-      // console.log('Error: FileSystem.getInfoAsync', error);
+      this.addDebugStatement(`Error: FileSystem.getInfoAsync ${error}`);
     }
 
-    // console.log(`FILE INFO: ${JSON.stringify(info)}`);
+    this.addDebugStatement(`FILE INFO: ${JSON.stringify(info)}`);
 
     try {
       await Audio.setAudioModeAsync(this.props.audioMode);
     } catch (error) {
-      // console.log('Error: Audio.setAudioModeAsync', error);
+      this.addDebugStatement(`Error: Audio.setAudioModeAsync ${error}`);
     }
 
     // now that recording is complete, create and load a new sound object
@@ -384,7 +384,7 @@ export default class SoundRecorder extends Component {
       });
       this.sound = sound;
     } catch (error) {
-      // console.log('Error: createNewLoadedSound', error);
+      this.addDebugStatement(`Error: createNewLoadedSound ${error}`);
     }
     this.setState({
       isLoading: false
@@ -398,7 +398,7 @@ export default class SoundRecorder extends Component {
     if (!playbackStatus.isLoaded) {
       // Update your UI for the unloaded state
       if (playbackStatus.error) {
-        console.log(
+        this.addDebugStatement(
           `Encountered a fatal error during playback: ${playbackStatus.error}
           Please report this error as an issue.  Thank you!`
         );
@@ -407,9 +407,8 @@ export default class SoundRecorder extends Component {
     } else {
       // Update the UI for the loaded state
       if (playbackStatus.isPlaying) {
-        console.log(
-          'playbackStatus.positionMillis (here): ',
-          playbackStatus.positionMillis
+        this.addDebugStatement(
+          `playbackStatus.positionMillis (here): ${playbackStatus.positionMillis}`
         );
 
         // Update  UI for the playing state
@@ -424,7 +423,7 @@ export default class SoundRecorder extends Component {
           this.state.playbackStatus !== 'buffering'
         ) {
           // Update your UI for the paused state
-          console.log('playbackStatus is paused');
+          this.addDebugStatement('playbackStatus is paused');
           this.setState({
             playbackStatus: 'paused',
             positionMillis: playbackStatus.positionMillis,
@@ -435,12 +434,12 @@ export default class SoundRecorder extends Component {
 
       if (playbackStatus.isBuffering) {
         // Update your UI for the buffering state
-        console.log('playbackStatus is buffering');
+        this.addDebugStatement('playbackStatus is buffering');
         this.setState({ playbackStatus: 'buffering' });
       }
 
       if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
-        console.log('playbackStatus is stopped');
+        this.addDebugStatement('playbackStatus is stopped');
         this.setState({
           playbackStatus: 'stopped',
           isPlaying: false
@@ -521,11 +520,11 @@ export default class SoundRecorder extends Component {
     if (this.sound !== null) {
       try {
         await this.sound.unloadAsync().then(() => {
-          // console.log('******** sound unloaded ********');
+          this.addDebugStatement('******** sound unloaded ********');
           this.props.onComplete(this.state.soundFileInfo);
         });
       } catch (error) {
-        console.log('Error: unloadAsync ', error);
+        this.addDebugStatement(`Error: unloadAsync ${error}`);
       }
       // clear the status update object if the sound hasn't already been set to null
       if (this.sound.hasOwnProperty('setOnPlaybackStatusUpdate')) {
@@ -541,7 +540,7 @@ export default class SoundRecorder extends Component {
 
   onSliderValueChange = value => {
     // set the postion of the actual sound object
-    console.log('onSliderValueChange: ', value);
+    this.addDebugStatement(`onSliderValueChange: ${value}`);
     this.sound.setPositionAsync(value);
   };
 
@@ -579,10 +578,9 @@ export default class SoundRecorder extends Component {
           this.setState({ isPlaying: true, playbackStatus: 'playing' });
         });
       } else {
-        /* console.log(
-          'Error onPlayPausePressed: unhandled state.playbackStatus = ',
-          this.state.playbackStatus
-        ); */
+        this.addDebugStatement(
+          `Error onPlayPausePressed: unhandled state.playbackStatus ${this.state.playbackStatus}`
+        );
       }
     }
   };
@@ -636,11 +634,19 @@ export default class SoundRecorder extends Component {
             {this.props.completeButtonText}
           </RkButton>
           {renderIf(this.props.showDebug)(
-            <View style={{ backgroundColor: 'goldenrod' }}>
+            <ScrollView
+              style={{
+                backgroundColor: '#FAFAD2',
+                height: 150,
+                padding: 5,
+                borderWidth: 0.5,
+                borderColor: '#d6d7da'
+              }}
+            >
               <Text style={{ color: 'darkblue' }}>
                 {this.state.debugStatements}
               </Text>
-            </View>
+            </ScrollView>
           )}
         </View>
       </View>

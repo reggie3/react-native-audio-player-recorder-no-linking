@@ -45,19 +45,18 @@ This component accepts the following props:
 | audioMode | object |  see below | a set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html) |
 | timeStampStyle | object |  <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | style of the timestamp displayed while playing and recording |
 | showTimeStamp | boolean | true |determines whether or not to display timestamp |
+| showDebug | boolean | false |shows debug related items in a view on the recorder screen |
 
 ### Sound Clip information returned by this component
 The onComplete callback receives an object similiar to the following
 ~~~
-{
-    "size":115824,
-    "modificationTime":1515107376,
-    "uri":"file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540reggie3%252Freact-native-expo-sound-recorder/Audio/recording-20cfc766-faba-47cf-9914-8fc81b149012.m4a",
-    "isDirectory":false,
-    "exists":true,
-    "durationMillis": 34535
-}
+"size":115824,
+"modificationTime":1515107376,
+"uri":"file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540reggie3%252Freact-native-expo-sound-recorder/Audio/recording-20cfc766-faba-47cf-9914-8fc81b149012.m4a",
+"isDirectory":false,
+"exists":true,
+"durationMillis": 34535
 ~~~
 
-### Audio Mode defaults
-<pre>allowsRecordingIOS:false<br>interruptionModeIOS:<br>Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,<br>playsInSilentModeIOS: true,<br>playsInSilentLockedModeIOS: true,<br>shouldDuckAndroid: true,<br>interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX</pre>
+### Default Audio Mode Object
+<pre>allowsRecordingIOS:true<br>interruptionModeIOS:<br>Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,<br>playsInSilentModeIOS: true,<br>playsInSilentLockedModeIOS: true,<br>shouldDuckAndroid: true,<br>interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX</pre>

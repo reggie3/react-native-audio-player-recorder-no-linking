@@ -4,7 +4,7 @@ import { Audio,   } from 'expo';
 export const completeButtonText = 'Finished';
 
 export const audioMode = {
-  allowsRecordingIOS: false,
+  allowsRecordingIOS: true,
   interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
   playsInSilentModeIOS: true,
   playsInSilentLockedModeIOS: true,

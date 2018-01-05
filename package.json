@@ -30,7 +30,7 @@
     "recorder",
     "javascript"
   ],
-  "files":[
+  "files": [
     "defaults.js",
     "SoundRecorder.js",
     "defaults.js"

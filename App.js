@@ -49,6 +49,7 @@ export default class App extends Component {
             maxDurationMillis={150000}
             completeButtonText={'Finished'}
             showDebug={true}
+          
           />
         )}
         {renderIf(this.state.viewToShow === 'home')(

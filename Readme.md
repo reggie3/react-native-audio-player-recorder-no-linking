@@ -42,7 +42,7 @@ This component accepts the following props:
 | onComplete (required)  | function |  none | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below) |
 | maxDurationMillis | number|  600000 (10 miniutes) | maximum length of the recording in milliseconds |
 | completeButtonText | string|  finished | text dsplayed on the button that executes the onComplete callback |
-| audioMode | object |  <pre>allowsRecordingIOS:false<br>interruptionModeIOS:<br>Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,<br>playsInSilentModeIOS: true,<br>playsInSilentLockedModeIOS: true,<br>shouldDuckAndroid: true,<br>interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX</pre> | a set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html) |
+| audioMode | object |  see below | a set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html) |
 | timeStampStyle | object |  <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | style of the timestamp displayed while playing and recording |
 | showTimeStamp | boolean | true |determines whether or not to display timestamp |
 
@@ -58,3 +58,6 @@ The onComplete callback receives an object similiar to the following
     "durationMillis": 34535
 }
 ~~~
+
+### Audio Mode defaults
+<pre>allowsRecordingIOS:false<br>interruptionModeIOS:<br>Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,<br>playsInSilentModeIOS: true,<br>playsInSilentLockedModeIOS: true,<br>shouldDuckAndroid: true,<br>interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX</pre>

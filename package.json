@@ -1,6 +1,6 @@
 {
   "main": "node_modules/expo/AppEntry.js",
-  "private": true,
+  "private": false,
   "dependencies": {
     "expo": "^24.0.0",
     "install": "^0.10.2",

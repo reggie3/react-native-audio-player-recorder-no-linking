@@ -7,6 +7,8 @@ import Slider from 'react-native-slider';
 import PropTypes from 'prop-types';
 import * as defaultProps from './defaults';
 import BlinkView from 'react-native-blink-view';
+import renderIf from 'render-if';
+
 const GetRecordingButtonByStatus = props => {
   if (props.isRecording) {
     return (
@@ -193,7 +195,8 @@ export default class SoundRecorder extends Component {
       soundDuration: null,
       maxSliderValue: 0,
       currentSliderValue: 0,
-      soundFileInfo: 'make a recording to see its information'
+      soundFileInfo: 'make a recording to see its information',
+      debugStatements: 'debug info will appear here'
     };
     this.recordingSettings = JSON.parse(
       JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY)
@@ -204,6 +207,10 @@ export default class SoundRecorder extends Component {
     // ask for permissions to use the device's audio
     this.askForPermissions();
     this.componentIsMounted = true;
+  }
+
+  addDebugStatement = (statement)=>{
+    this.setState({debugStatements: this.state.debugStatements.concat(`${statement}\n`)})
   }
 
   askForPermissions = async () => {
@@ -509,7 +516,7 @@ export default class SoundRecorder extends Component {
 
   // perform this action when the user presses the "done" key
   onComplete = async () => {
-    // need to check if sound has been set to null in case the user 
+    // need to check if sound has been set to null in case the user
     // has recorded soemthing, then did a reset, and then clicks the finish button
     if (this.sound !== null) {
       try {
@@ -526,7 +533,7 @@ export default class SoundRecorder extends Component {
       }
       this.sound = null;
     } else {
-      // only get here if the user has never tried to click record or 
+      // only get here if the user has never tried to click record or
       // did a reset
       this.props.onComplete(this.state.soundFileInfo);
     }
@@ -628,6 +635,13 @@ export default class SoundRecorder extends Component {
           >
             {this.props.completeButtonText}
           </RkButton>
+          {renderIf(this.props.showDebug)(
+            <View style={{ backgroundColor: 'goldenrod' }}>
+              <Text style={{ color: 'darkblue' }}>
+                {this.state.debugStatements}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     );
@@ -635,12 +649,13 @@ export default class SoundRecorder extends Component {
 }
 
 SoundRecorder.propTypes = {
-  onComplete: PropTypes.func,
+  onComplete: PropTypes.func.isRequired,
   maxDurationMillis: PropTypes.number,
   completeButtonText: PropTypes.string,
   audioMode: PropTypes.object,
   timeStampStyle: PropTypes.object,
-  showTimeStamp: PropTypes.bool
+  showTimeStamp: PropTypes.bool,
+  showDebug: PropTypes.bool
 };
 
 SoundRecorder.defaultProps = {
@@ -649,7 +664,8 @@ SoundRecorder.defaultProps = {
   prepareToRecordParams: defaultProps.prepareToRecordParams,
   maxDurationMillis: 600000,
   timeStampStyle: defaultProps.timeStampStyle,
-  showTimeStamp: true
+  showTimeStamp: true,
+  showDebug: false
 };
 
 const styles = StyleSheet.create({

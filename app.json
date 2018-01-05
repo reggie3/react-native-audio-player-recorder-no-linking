@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "react-native-expo-sound-recorder",
-    "description": "This project is really great.",
-    "slug": "react-native-expo-sound-recorder",
+    "name": "react-native-sound-recorder-no-native",
+    "description": "An application that includes a drop in sound recorder component.",
+    "slug": "react-native-sound-recorder-no-native",
     "privacy": "public",
     "sdkVersion": "24.0.0",
     "platforms": ["ios", "android"],

@@ -48,6 +48,7 @@ export default class App extends Component {
             onComplete={this.soundRecorderComplete.bind(this)}
             maxDurationMillis={150000}
             completeButtonText={'Finished'}
+            showDebug={true}
           />
         )}
         {renderIf(this.state.viewToShow === 'home')(
@@ -79,6 +80,7 @@ export default class App extends Component {
             </RkButton>
           </View>
         )}
+ 
       </View>
     );
   }

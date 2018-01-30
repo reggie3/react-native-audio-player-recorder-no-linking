@@ -1,5 +1,5 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "index.js",
   "private": false,
   "dependencies": {
     "expo": "^25.0.0",
@@ -13,7 +13,7 @@
     "render-if": "^0.1.1"
   },
   "name": "react-native-sound-recorder-no-native",
-  "version": "0.0.7",
+  "version": "0.0.71",
   "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
   "devDependencies": {},
   "scripts": {

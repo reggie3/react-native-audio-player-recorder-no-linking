@@ -1,19 +1,19 @@
 {
-  "main": "index.js",
+  "main": "node_modules/expo/AppEntry.js",
   "private": false,
   "dependencies": {
-    "expo": "^24.0.0",
+    "expo": "^25.0.0",
     "install": "^0.10.2",
     "prop-types": "^15.6.0",
-    "react": "16.0.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "react": "16.2.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
     "react-native-blink-view": "0.0.5",
     "react-native-slider": "^0.11.0",
     "react-native-ui-kitten": "^2.0.1",
     "render-if": "^0.1.1"
   },
   "name": "react-native-sound-recorder-no-native",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
   "devDependencies": {},
   "scripts": {

@@ -1,10 +1,10 @@
+import "expo";
 import React, { Component } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import SoundRecorder from './SoundRecorder';
 import { Constants } from 'expo';
 import { RkButton } from 'react-native-ui-kitten';
 import renderIf from 'render-if';
-import expo from 'expo';
 
 export default class App extends Component {
   constructor(props) {
@@ -29,6 +29,11 @@ export default class App extends Component {
       soundFileInfo
     });
   };
+
+  uploadCallback =(message)=>{
+    console.log(`uploadCallback: ${message}` );
+  }
+
 
   render() {
     return (
@@ -73,10 +78,17 @@ export default class App extends Component {
             </Text>
             <RkButton
               rkType="stretch"
-              onPress={this.showRecorder.bind(this)}
+              onPress={this.showRecorder}
               style={{ marginVertical: 5 }}
             >
               Record Sound
+            </RkButton>
+            <RkButton
+              rkType="stretch success"
+              onPress={this.uploadSound}
+              style={{ marginVertical: 5 }}
+            >
+              Upload Sound
             </RkButton>
           </View>
         )}

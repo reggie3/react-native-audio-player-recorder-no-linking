@@ -5,7 +5,8 @@ import Recorder from './Recorder';
 import Player from './Player';
 import { Constants } from 'expo';
 import { RkButton, RkText } from 'react-native-ui-kitten';
-import * as PlayerControls from './playerControls';
+import * as PlayerControls from './PlayerControls';
+import * as RecorderControls from './RecorderControls';
 
 const AUDIO_CLIP_URL = encodeURI(
   'http://res.cloudinary.com/tourystory/video/upload/v1516221224/audioclips/eaffcf76b6cbf5032634150b69286ccab489e66040b0508d81f2ce0478a41036-a987f707-552d-eeea-baea-2b1731b429a0.mp4'
@@ -88,21 +89,16 @@ export default class App extends Component {
               }
             }}
             style={{ flex: 1 }}
-            onComplete={this.playerComplete.bind(this)}
-            completeButtonText={'Return Home'}
             uri={AUDIO_CLIP_URL}
             showDebug={true}
             loadingButton={PlayerControls.loadingButton}
-            playButton={
-
-              PlayerControls.getPlayButton(this.state.player)
-
-            }
-            playingButton={
-              PlayerControls.playingButton(this.state.player)
-}
+            playButton={PlayerControls.getPlayButton(this.state.player)}
+            playingButton={PlayerControls.playingButton(this.state.player)}
             errorBadge={PlayerControls.errorBadge}
-            goBackButton={PlayerControls.goBackButton(this.state.player)}
+            goBackButton={PlayerControls.goBackButton(
+              this.state.player,
+              this.playerComplete
+            )}
           />
         </View>
       );

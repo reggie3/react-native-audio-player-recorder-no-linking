@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
-import { RkButton,  } from 'react-native-ui-kitten';
-import { FontAwesome } from '@expo/vector-icons';
 import { Audio } from 'expo';
 import Slider from 'react-native-slider';
 import PropTypes from 'prop-types';
@@ -330,17 +328,12 @@ export default class Player extends Component {
 }
 
 Player.propTypes = {
-  onComplete: PropTypes.func.isRequired,
-  completeButtonText: PropTypes.string,
-  audioMode: PropTypes.object,
   timeStampStyle: PropTypes.object,
   showTimeStamp: PropTypes.bool,
   showDebug: PropTypes.bool
 };
 
 Player.defaultProps = {
-  audioMode: defaultProps.audioMode,
-  completeButtonText: defaultProps.completeButtonText,
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true,
   showDebug: false

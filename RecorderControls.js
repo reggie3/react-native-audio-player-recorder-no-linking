@@ -20,30 +20,57 @@ export const loadingButton = (
   </RkButton>
 );
 
-export const getPlayButton = (player) => {
+export const getPlayButton = (recorder) => {
   debugger;
   return (
     <RkButton
       rkType="success"
       style={{ ...roundButtonStyle, paddingLeft: 25 }}
-      onPress={player ? player.onPlayPress : null}
+      onPress={recorder ? recorder.onPlayPress : null}
     >
       <FontAwesome name="play" color="white" size={75} />
     </RkButton>
   );
 };
 
-export const playingButton = (player) => {
+export const playingButton = (recorder) => {
   return (
     <RkButton
       rkType="danger"
       style={roundButtonStyle}
-      onPress={player ? player.onPausePress : null}
+      onPress={recorder ? recorder.onPausePress : null}
     >
       <FontAwesome name="pause" color="white" size={65} />
     </RkButton>
   );
 };
+
+export const stopRecordingButton=(recorder)=>{
+  return (
+      <RkButton
+        rkType="danger"
+        style={roundButtonStyle}
+        onPress={recorder ? recorder.onStopRecordingPress : null}
+      >
+        <FontAwesome name="stop" color="white" size={65} />
+      </RkButton>
+  );
+}
+export const startRecordingButton=(recorder)=>{
+return (
+  <RkButton
+  rkType="success"
+  style={styles.roundButton}
+  onPress={props.onPress}
+>
+  <FontAwesome name="microphone" color="white" size={75} />
+</RkButton>
+);
+}
+
+export const disableRecordingButton=(recorder)=>{
+  
+}
 
 export const errorBadge = (
   <RkButton rkType="danger" style={roundButtonStyle} onPress={() => {}}>
@@ -51,14 +78,14 @@ export const errorBadge = (
   </RkButton>
 );
 
-export const goBackButton = (player, onComplete) => {
+export const goBackButton = (recorder, onComplete) => {
   return (
     <RkButton
       rkType="success stretch"
       style={{ marginVertical: 5 }}
       onPress={() => {
         onComplete();
-        player ? player.stopPlaying() : null;
+        recorder ? recorder.stopPlaying() : null;
       }}
     >
       <RkText>Go Back</RkText>

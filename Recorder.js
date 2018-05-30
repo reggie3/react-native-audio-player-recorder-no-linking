@@ -10,40 +10,9 @@ import BlinkView from 'react-native-blink-view';
 import renderIf from 'render-if';
 
 const GetRecordingButtonByStatus = props => {
-  if (props.isRecording) {
-    return (
-      <View>
-        <RkButton
-          rkType="danger"
-          style={styles.roundButton}
-          onPress={props.onPress}
-        >
-          <FontAwesome name="stop" color="white" size={65} />
-        </RkButton>
-      </View>
-    );
-  } else if (props.isRecordingComplete) {
-    return (
-      <View>
-        <RkButton style={[styles.roundButton, { backgroundColor: 'gray' }]}>
-          <FontAwesome name="microphone" color="white" size={75} />
-        </RkButton>
-      </View>
-    );
-  } else {
-    return (
-      <View>
-        <RkButton
-          rkType="success"
-          style={styles.roundButton}
-          onPress={props.onPress}
-        >
-          <FontAwesome name="microphone" color="white" size={75} />
-        </RkButton>
-      </View>
-    );
-  }
-};
+
+
+  
 
 const GetPlayButtonByStatus = props => {
   
@@ -206,6 +175,28 @@ export default class Recorder extends Component {
     this.askForPermissions();
     this.componentIsMounted = true;
   }
+
+  renderRecordingButtonByStatus = () => {
+    let button;
+
+    if (props.isRecording) {
+      button = this.props.stopRecordingButton
+    } else {
+     // TODO: if not playing, display a green recording button
+     // TODO: else, display a disabled recording button
+      return (
+        <View>
+          <RkButton
+            rkType="success"
+            style={styles.roundButton}
+            onPress={props.onPress}
+          >
+            <FontAwesome name="microphone" color="white" size={75} />
+          </RkButton>
+        </View>
+      );
+    }
+  };
 
   addDebugStatement = statement => {
     this.setState({

@@ -10,7 +10,7 @@ This module makes extensive use of the Expo.io Audio SDK located [here](https://
 
 ## Why Use This?
 
-This module is useful if you need a drop in sound recording component for an application in which using platform specific native code is prohibited; for example an application created using expo.io.
+This module is useful if you need drop in sound recorder or player components for an application in which using platform specific native code is prohibited; for example an application created using expo.io.
 
 ## Why Not Use This?
 
@@ -22,32 +22,43 @@ You are not restricted from using native code, and can find a better module to u
 
 ## Usage
 
-`import SoundRecorder from 'react-native-sound-recorder-no-native';`
+`import { Recorder, Player} from 'react-native-sound-recorder-no-native';`
 
 ### Example
 
 ~~~
- <SoundRecorder
+ <Recorder
     style={{ flex: 1 }}
     onComplete={this.soundRecorderComplete.bind(this)}
     maxDurationMillis={150000}
     completeButtonText={'Finished'}
+    showDebug={false}
+/>
+
+<Player
+    style={{ flex: 1 }}
+    onComplete={this.playerComplete.bind(this)}
+    completeButtonText={'Return Home'}
+    uri={AUDIO_CLIP_URL}
+    showDebug={true}
 />
 ~~~
 
 This component accepts the following props:
 
-| Name                   | Type |  Default | Description |
-| ---------------------- | ---- | -------- | ----------- | 
-| onComplete (required)  | function |  none | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below) |
-| maxDurationMillis | number|  600000 (10 miniutes) | maximum length of the recording in milliseconds |
-| completeButtonText | string|  finished | text dsplayed on the button that executes the onComplete callback |
-| audioMode | object |  see below | a set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html) |
-| timeStampStyle | object |  <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | style of the timestamp displayed while playing and recording |
-| showTimeStamp | boolean | true |determines whether or not to display timestamp |
-| showDebug | boolean | false |shows debug related items in a view on the recorder screen |
+| Name                  | Type     | Default                                             | Description                                                                                                                        |
+| --------------------- | -------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | undefined |
+| onComplete for the Recorder Component(Recorder : required) | function | none                                                | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below)        |
+| onComplete for the Player Component ( : required) | function | none                                                | callback function executed when the user presses the finished playing button       |
+| maxDurationMillis (Recorder Only)    | number   | 600000 (10 miniutes)                                | maximum length of the recording in milliseconds                                                                                    |
+| completeButtonText   | string   | finished                                            | text dsplayed on the button that executes the onComplete callback                                                                  |
+| audioMode  (Recorder ONly)           | object   | see below                                           | a set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html) |
+| timeStampStyle        | object   | <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | style of the timestamp displayed while playing and recording                                                                       |
+| showTimeStamp         | boolean  | true                                                | determines whether or not to display timestamp                                                                                     |
+| showDebug             | boolean  | false                                               | shows debug related items in a view on the recorder screen                                                                         |
+|uri (Player Only) | string | true | URI of the sound to be played |
 
-### Sound Clip information returned by this component
+### Sound Clip information returned by the Recorder component
 The onComplete callback receives an object similiar to the following
 ~~~
 "size":115824,

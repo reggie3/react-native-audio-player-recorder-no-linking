@@ -5,16 +5,18 @@ import Recorder from './Recorder';
 import Player from './Player';
 import { Constants } from 'expo';
 import { RkButton, RkText } from 'react-native-ui-kitten';
-import renderIf from 'render-if';
+import * as PlayerControls from './playerControls';
 
 const AUDIO_CLIP_URL = encodeURI(
-"http://res.cloudinary.com/tourystory/video/upload/v1516221224/audioclips/eaffcf76b6cbf5032634150b69286ccab489e66040b0508d81f2ce0478a41036-a987f707-552d-eeea-baea-2b1731b429a0.mp4");
+  'http://res.cloudinary.com/tourystory/video/upload/v1516221224/audioclips/eaffcf76b6cbf5032634150b69286ccab489e66040b0508d81f2ce0478a41036-a987f707-552d-eeea-baea-2b1731b429a0.mp4'
+);
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       soundFileInfo: 'sound file information will appear here',
-      viewToShow: 'home'
+      viewToShow: 'home',
+      player: null
     };
   }
 
@@ -39,7 +41,7 @@ export default class App extends Component {
 
   playerComplete = () => {
     this.setState({
-      viewToShow: 'home',
+      viewToShow: 'home'
     });
   };
 
@@ -47,88 +49,109 @@ export default class App extends Component {
     console.log(`uploadCallback: ${message}`);
   };
 
-  renderScreen =()=>{
-    if(this.state.viewToShow === 'recorder'){
-      return (<View
-        style={{
-          display: 'flex',
-          flex: 1
-        }}
-      >
-        <RkText>Sound Recorder</RkText>
-        <Recorder
-          style={{ flex: 1 }}
-          onComplete={this.recorderComplete.bind(this)}
-          maxDurationMillis={150000}
-          completeButtonText={'Finished'}
-        />
-      </View>)
-    }
-   else if(this.state.viewToShow === 'player'){
-      return (<View
-        style={{
-          display: 'flex',
-          flex: 1
-        }}
-      >
-        <RkText>Sound Player</RkText>
-        <Player
-          style={{ flex: 1 }}
-          onComplete={this.playerComplete.bind(this)}
-          completeButtonText={'Return Home'}
-          uri={AUDIO_CLIP_URL}
-          showDebug={true}
-        />
-      </View>
-    )}
-    else if(this.state.viewToShow ==='home'){
+  renderScreen = () => {
+    if (this.state.viewToShow === 'recorder') {
       return (
         <View
+          style={{
+            display: 'flex',
+            flex: 1
+          }}
+        >
+          <RkText>Sound Recorder</RkText>
+          <Recorder
+            ref={(ref) => {
+              this.recorder = ref;
+            }}
+            style={{ flex: 1 }}
+            onComplete={this.recorderComplete.bind(this)}
+            maxDurationMillis={150000}
+            completeButtonText={'Finished'}
+          />
+        </View>
+      );
+    } else if (this.state.viewToShow === 'player') {
+      return (
+        <View
+          style={{
+            display: 'flex',
+            flex: 1
+          }}
+        >
+          <RkText>Sound Player</RkText>
+          <Player
+            ref={(ref) => {
+              // shouldn't set state in the render function, but
+              // it'll only happen one time here
+              if (!this.state.player) {
+                this.setState({ player: ref });
+              }
+            }}
+            style={{ flex: 1 }}
+            onComplete={this.playerComplete.bind(this)}
+            completeButtonText={'Return Home'}
+            uri={AUDIO_CLIP_URL}
+            showDebug={true}
+            loadingButton={PlayerControls.loadingButton}
+            playButton={
+
+              PlayerControls.getPlayButton(this.state.player)
+
+            }
+            playingButton={
+              PlayerControls.playingButton(this.state.player)
+}
+            errorBadge={PlayerControls.errorBadge}
+            goBackButton={PlayerControls.goBackButton(this.state.player)}
+          />
+        </View>
+      );
+    } else if (this.state.viewToShow === 'home') {
+      return (
+        <View
+          style={{
+            flex: 1,
+            margin: 10,
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}
+        >
+          <RkText
             style={{
+              fontSize: 20,
               flex: 1,
-              margin: 10,
               display: 'flex',
-              justifyContent: 'space-between'
+              alignSelf: 'center',
+              color: 'darkblue'
             }}
           >
-            <RkText
-              style={{
-                fontSize: 20,
-                flex: 1,
-                display: 'flex',
-                alignSelf: 'center',
-                color: 'darkblue'
-              }}
-            >
-              {this.state.soundFileInfo}
-            </RkText>
-            <RkButton
-              rkType="stretch"
-              onPress={this.showRecorder}
-              style={{ marginVertical: 5 }}
-            >
-              Record Sound
-            </RkButton>
-            <RkButton
-              rkType="stretch"
-              onPress={this.showPlayer}
-              style={{ marginVertical: 5 }}
-            >
-              Play Music
-            </RkButton>
-            <RkButton
-              rkType="stretch success"
-              onPress={this.uploadSound}
-              style={{ marginVertical: 5 }}
-            >
-              Upload Sound
-            </RkButton>
-          </View>
-      )
-    }
-    else
-    return null
-  }
+            {this.state.soundFileInfo}
+          </RkText>
+          <RkButton
+            rkType="stretch"
+            onPress={this.showRecorder}
+            style={{ marginVertical: 5 }}
+          >
+            Record Sound
+          </RkButton>
+          <RkButton
+            rkType="stretch"
+            onPress={this.showPlayer}
+            style={{ marginVertical: 5 }}
+          >
+            Play Music
+          </RkButton>
+          <RkButton
+            rkType="stretch success"
+            onPress={this.uploadSound}
+            style={{ marginVertical: 5 }}
+          >
+            Upload Sound
+          </RkButton>
+        </View>
+      );
+    } else return null;
+  };
 
   render() {
     return (
@@ -143,17 +166,17 @@ export default class App extends Component {
         >
           Sound Demo App
         </RkText>
-       
+
         <View
           style={{
             backgroundColor: 'lightblue',
             padding: 5,
             display: 'flex',
             flex: 1
-          }}>
-         {this.renderScreen()}
+          }}
+        >
+          {this.renderScreen()}
         </View>
-
       </View>
     );
   }

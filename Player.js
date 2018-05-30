@@ -48,50 +48,14 @@ export default class Player extends Component {
       this.state.playStatus === 'BUFFERING' ||
       this.state.playStatus === 'LOADING'
     ) {
-      button = (
-        <RkButton
-          style={[styles.roundButton, { backgroundColor: 'gray' }]}
-          onPress={() => {}}
-        >
-          <FontAwesome name="hourglass" color="white" size={65} />
-        </RkButton>
-      );
-    } else if (this.state.playStatus === 'PAUSED') {
-      button = (
-        <RkButton
-          rkType="success"
-          style={[styles.roundButton, { paddingLeft: 25 }]}
-          onPress={this.onPlayPress}
-        >
-          <FontAwesome name="play" color="white" size={75} />
-        </RkButton>
-      );
-    } else if (this.state.playStatus === 'STOPPED') {
-      button = (
-        <RkButton
-          rkType="success"
-          style={[styles.roundButton, { paddingLeft: 25 }]}
-          onPress={this.onPlayPress}
-        >
-          <FontAwesome name="play" color="white" size={75} />
-        </RkButton>
-      );
+      button = this.props.loadingButton;
+    } else if (this.state.playStatus === 'PAUSED' || this.state.playStatus === 'STOPPED') {
+      button =this.props.playButton; 
     } else if (this.state.playStatus === 'PLAYING') {
-      button = (
-        <RkButton
-          rkType="danger"
-          style={styles.roundButton}
-          onPress={this.onPausePress}
-        >
-          <FontAwesome name="pause" color="white" size={65} />
-        </RkButton>
-      );
+      button = this.props.playingButton;
+      
     } else if (this.state.playStatus === 'ERROR') {
-      button = (
-        <RkButton rkType="danger" style={styles.roundButton} onPress={() => {}}>
-          <FontAwesome name="exclamation-triangle" color="red" size={65} />
-        </RkButton>
-      );
+      button = this.props.errorBadge
     } else {
       debugger;
     }
@@ -328,6 +292,10 @@ export default class Player extends Component {
     }
   };
 
+  stopPlaying=()=>{
+    this.sound.stopAsync();
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -337,13 +305,8 @@ export default class Player extends Component {
         {this.renderTimeStamp()}
 
         <View style={{ alignSelf: 'stretch' }}>
-          <RkButton
-            rkType="success stretch"
-            style={{ marginVertical: 5 }}
-            onPress={this.props.onComplete}
-          >
-            {this.props.completeButtonText}
-          </RkButton>
+          {this.props.goBackButton}
+          
 
           {renderIf(this.props.showDebug)(
             <ScrollView
@@ -389,12 +352,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
-  },
-  roundButton: {
-    borderRadius: 50,
-    width: 100,
-    height: 100,
-    alignSelf: 'center'
   }
 });
 

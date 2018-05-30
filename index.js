@@ -1,3 +1,7 @@
-import SoundRecorder from './SoundRecorder';
+import Recorder from './Recorder';
+import Player from './Player';
 
-module.exports = SoundRecorder;
+module.exports = {
+    Player,
+    Recorder
+};

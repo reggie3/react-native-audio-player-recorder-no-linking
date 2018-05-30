@@ -113,7 +113,7 @@ const GetPlayButtonByStatus = props => {
 
 const TimeStamp = props => {
   /* 
-  the 'call' statements below binds 'this' to the SoundRecorder class
+  the 'call' statements below binds 'this' to the Recorder class
   I used this technique vice pulling out the relevant functions becasue
   I  knew that would work, and didn't want to incur risk by
   deviating from Expo's example too much
@@ -173,7 +173,7 @@ const PlaybackBar = props => {
   );
 };
 
-export default class SoundRecorder extends Component {
+export default class Recorder extends Component {
   constructor(props) {
     super(props);
     const { height, width } = Dimensions.get('window');
@@ -654,7 +654,7 @@ export default class SoundRecorder extends Component {
   }
 }
 
-SoundRecorder.propTypes = {
+Recorder.propTypes = {
   onComplete: PropTypes.func.isRequired,
   maxDurationMillis: PropTypes.number,
   completeButtonText: PropTypes.string,
@@ -664,7 +664,7 @@ SoundRecorder.propTypes = {
   showDebug: PropTypes.bool
 };
 
-SoundRecorder.defaultProps = {
+Recorder.defaultProps = {
   audioMode: defaultProps.audioMode,
   completeButtonText: defaultProps.completeButtonText,
   prepareToRecordParams: defaultProps.prepareToRecordParams,

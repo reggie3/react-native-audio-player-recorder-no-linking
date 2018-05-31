@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
 import { Audio } from 'expo';
-import Slider from 'react-native-slider';
 import PropTypes from 'prop-types';
 import * as defaultProps from './defaults';
-import BlinkView from 'react-native-blink-view';
 import renderIf from 'render-if';
-
+import PlaybackSlider from './PlaybackSlider';
+import TimeStamp from './TimeStamp';
 export default class Player extends Component {
   constructor(props) {
     super(props);
@@ -17,6 +16,7 @@ export default class Player extends Component {
       isLoaded: false,
       isBuffering: 'NOT_STARTED',
       playStatus: 'LOADING', // LOADING, BUFFERING, PAUSED, STOPPED, PLAYING
+      blinkTimeStamp: true,
 
       // legacy items
       isPlaying: false,
@@ -29,6 +29,7 @@ export default class Player extends Component {
   }
 
   componentDidMount = () => {
+    this.mounted = true;
     this.loadSound();
   };
 
@@ -38,6 +39,7 @@ export default class Player extends Component {
       isBuffering: 'NOT_STARTED'
     });
     this.sound.setOnPlaybackStatusUpdate(null);
+    this.mounted = false;
   };
 
   renderPlayButtonByStatus = () => {
@@ -47,68 +49,20 @@ export default class Player extends Component {
       this.state.playStatus === 'LOADING'
     ) {
       button = this.props.loadingButton;
-    } else if (this.state.playStatus === 'PAUSED' || this.state.playStatus === 'STOPPED') {
-      button =this.props.playButton; 
+    } else if (
+      this.state.playStatus === 'PAUSED' ||
+      this.state.playStatus === 'STOPPED'
+    ) {
+      button = this.props.playButton;
     } else if (this.state.playStatus === 'PLAYING') {
       button = this.props.playingButton;
-      
     } else if (this.state.playStatus === 'ERROR') {
-      button = this.props.errorBadge
+      button = this.props.errorBadge;
     } else {
       debugger;
     }
 
-    return <View>{button}</View>;
-  };
-
-  renderPlaybackBar = () => {
-    return (
-      <View
-        style={{
-          height: 60,
-          width: this.state.width
-        }}
-      >
-        <Slider
-          trackStyle={sliderStyles.track}
-          thumbStyle={sliderStyles.thumb}
-          minimumTrackTintColor="#ec4c46"
-          minimimValue={0}
-          maximumValue={this.state.maxSliderValue}
-          value={this.state.currentSliderValue}
-          onSlidingComplete={this.onSliderValueChange}
-        />
-      </View>
-    );
-  };
-
-  renderTimeStamp = () => {
-    /* 
-  the 'call' statements below binds 'this' to the Player class
-  I used this technique vice pulling out the relevant functions becasue
-  I  knew that would work, and didn't want to incur risk by
-  deviating from Expo's example too much
-   */
-    if (this.props.showTimeStamp) {
-      let timeStampText = this.getPlaybackTimestamp();
-    let timeStampComponent = (<Text style={this.props.timeStampStyle}>{timeStampText}</Text>);
-      
-      if (
-        this.state.playStatus === 'PLAYING' ||
-        this.state.playStatus === 'STOPPED'
-      ) {
-        return (
-          timeStampComponent
-        );
-      } else if (this.state.playStatus === 'PAUSED') {
-        return (
-          <BlinkView blinking={true} delay={750}>
-           {timeStampComponent}
-          </BlinkView>
-        );
-      }
-    }
-    return null;
+    return <View style={{ backgroundColor: 'grey' }}>{button}</View>;
   };
 
   loadSound = async () => {
@@ -151,106 +105,80 @@ export default class Player extends Component {
   3. isloaded: true, isBuffering: false
   */
   onPlaybackStatusUpdate = (playbackStatus) => {
-    let that = this;
-    this.setState({
-      prevPlaybackStatus: that.state.playbackStatus,
-      playbackStatus: playbackStatus
-    });
+    if (this.mounted) {
+      let that = this;
+      this.setState({
+        prevPlaybackStatus: that.state.playbackStatus,
+        playbackStatus: playbackStatus
+      });
 
-    if (playbackStatus.error) {
-      this.setState({ playBackStatus: 'ERROR' });
-      this.addDebugStatement(
-        `Encountered a fatal error during playback: ${playbackStatus.error}
-        Please report this error as an issue.  Thank you!`
-      );
-    }
-
-    if (playbackStatus.isLoaded) {
-      // don't care about buffering if state.playStatus is equal to one of the other states
-      // state.playStatus can only be equal to one of the other states after buffer
-      // has completed, at which point state.playStatus is set to 'STOPPED'
-      if (
-        this.state.playStatus !== 'PLAYING' &&
-        this.state.playStatus !== 'PAUSED' &&
-        this.state.playStatus !== 'STOPPED' &&
-        this.state.playStatus !== 'ERROR'
-      ) {
-        if (playbackStatus.isLoaded && !this.state.isLoaded) {
-          this.setState({ isLoaded: true });
-          this.addDebugStatement(`playbackStatus.isLoaded`);
-        }
-        if (this.state.isLoaded && playbackStatus.isBuffering) {
-          this.setState({
-            playStatus: 'BUFFERING'
-          });
-          this.addDebugStatement(`playbackStatus.isBuffering IN_PROGRESS`);
-        }
-        if (
-          this.state.isLoaded &&
-          !playbackStatus.isBuffering &&
-          playbackStatus.hasOwnProperty('durationMillis')
-        ) {
-          this.setState({
-            playStatus: 'STOPPED'
-          });
-          this.addDebugStatement(`playbackStatus.isBuffering COMPLETE`);
-        }
-      }
-
-      // Update the UI for the loaded state
-      if (playbackStatus.isPlaying) {
+      if (playbackStatus.error) {
+        this.setState({ playBackStatus: 'ERROR' });
         this.addDebugStatement(
-          `playbackStatus.positionMillis (here): ${
-            playbackStatus.positionMillis
-          }`
+          `Encountered a fatal error during playback: ${playbackStatus.error}
+        Please report this error as an issue.  Thank you!`
         );
-
-        // Update  UI for the playing state
-        this.setState({
-          positionMillis: playbackStatus.positionMillis,
-          currentSliderValue: playbackStatus.positionMillis
-        });
       }
 
-      if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
-        this.addDebugStatement('playbackStatus is stopped');
-        this.setState({
-          playStatus: 'STOPPED',
-          isPlaying: false,
-          positionMillis: playbackStatus.durationMillis,
-          currentSliderValue: playbackStatus.durationMillis
-        });
+      if (playbackStatus.isLoaded) {
+        // don't care about buffering if state.playStatus is equal to one of the other states
+        // state.playStatus can only be equal to one of the other states after buffer
+        // has completed, at which point state.playStatus is set to 'STOPPED'
+        if (
+          this.state.playStatus !== 'PLAYING' &&
+          this.state.playStatus !== 'PAUSED' &&
+          this.state.playStatus !== 'STOPPED' &&
+          this.state.playStatus !== 'ERROR'
+        ) {
+          if (playbackStatus.isLoaded && !this.state.isLoaded) {
+            this.setState({ isLoaded: true });
+            this.addDebugStatement(`playbackStatus.isLoaded`);
+          }
+          if (this.state.isLoaded && playbackStatus.isBuffering) {
+            this.setState({
+              playStatus: 'BUFFERING'
+            });
+            this.addDebugStatement(`playbackStatus.isBuffering IN_PROGRESS`);
+          }
+          if (
+            this.state.isLoaded &&
+            !playbackStatus.isBuffering &&
+            playbackStatus.hasOwnProperty('durationMillis')
+          ) {
+            this.setState({
+              playStatus: 'STOPPED'
+            });
+            this.addDebugStatement(`playbackStatus.isBuffering COMPLETE`);
+          }
+        }
+
+        // Update the UI for the loaded state
+        if (playbackStatus.isPlaying) {
+          this.addDebugStatement(
+            `playbackStatus.positionMillis (here): ${
+              playbackStatus.positionMillis
+            }`
+          );
+
+          // Update  UI for the playing state
+          this.setState({
+            positionMillis: playbackStatus.positionMillis,
+            currentSliderValue: playbackStatus.positionMillis
+          });
+        }
+
+        if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
+          this.addDebugStatement('playbackStatus is stopped');
+          this.setState({
+            playStatus: 'STOPPED',
+            isPlaying: false,
+            positionMillis: playbackStatus.durationMillis,
+            currentSliderValue: playbackStatus.durationMillis
+          });
+        }
       }
     }
   };
-
-  getMMSSFromMillis(millis) {
-    const totalSeconds = millis / 1000;
-    const seconds = Math.floor(totalSeconds % 60);
-    const minutes = Math.floor(totalSeconds / 60);
-
-    const padWithZero = (number) => {
-      const string = number.toString();
-      if (number < 10) {
-        return '0' + string;
-      }
-      return string;
-    };
-    return padWithZero(minutes) + ':' + padWithZero(seconds);
-  }
-
-  getPlaybackTimestamp() {
-    if (
-      this.sound != null &&
-      this.state.positionMillis != null &&
-      this.state.durationMillis != null
-    ) {
-      return `${this.getMMSSFromMillis(
-        this.state.positionMillis
-      )} / ${this.getMMSSFromMillis(this.state.durationMillis)}`;
-    }
-    return '';
-  }
 
   onSliderValueChange = (value) => {
     // set the postion of the actual sound object
@@ -267,7 +195,7 @@ export default class Player extends Component {
   };
 
   onPlayPress = () => {
-    if (this.sound != null) {
+    if (this.sound != null  && this.mounted) {
       if (this.state.positionMillis === this.state.durationMillis) {
         this.sound.stopAsync().then(() => {
           this.sound.playAsync().then(() => {
@@ -290,21 +218,36 @@ export default class Player extends Component {
     }
   };
 
-  stopPlaying=()=>{
+  stopPlaying = () => {
     this.sound.stopAsync();
-  }
+  };
 
   render() {
     return (
       <View style={styles.container}>
         {this.renderPlayButtonByStatus()}
-        {this.renderPlaybackBar()}
+        <View style={{ backgroundColor: 'orange', flex: 1 }}>
+          <PlaybackSlider
+            maximumValue={this.state.maxSliderValue}
+            value={this.state.currentSliderValue}
+            onSlidingComplete={this.onSliderValueChange.bind(this)}
+            sliderWidth={this.progressBarWidth}
+          />
+        </View>
 
-        {this.renderTimeStamp()}
+        {/* {this.props.showTimeStamp ? (
+          <View style={{backgroundColor: 'red', flex: 1}}>
+            <TimeStamp
+              blink={this.state.blinkTimeStamp}
+              timeStampStyle={this.props.timeStampStyle}
+              positionMillis={this.state.positionMillis}
+              durationMillis={this.state.durationMillis}
+            />
+          </View>
+        ) : null} */}
 
         <View style={{ alignSelf: 'stretch' }}>
           {this.props.goBackButton}
-          
 
           {renderIf(this.props.showDebug)(
             <ScrollView
@@ -344,20 +287,7 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
-  }
-});
-
-const sliderStyles = StyleSheet.create({
-  track: {
-    height: 18,
-    borderRadius: 1,
-    backgroundColor: '#d5d8e8'
-  },
-  thumb: {
-    width: 20,
-    height: 30,
-    borderRadius: 1,
-    backgroundColor: '#838486'
+    alignItems: 'center',
+    backgroundColor: 'goldenrod'
   }
 });

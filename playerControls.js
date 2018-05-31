@@ -20,8 +20,7 @@ export const loadingButton = (
   </RkButton>
 );
 
-export const getPlayButton = (player) => {
-  debugger;
+export const playButton = (player) => {
   return (
     <RkButton
       rkType="success"
@@ -34,11 +33,14 @@ export const getPlayButton = (player) => {
 };
 
 export const playingButton = (player) => {
+  debugger;
   return (
     <RkButton
       rkType="danger"
       style={roundButtonStyle}
-      onPress={player ? player.onPausePress : null}
+      onPress={()=>{
+        debugger;
+        player ? player.onPausePress : null}}
     >
       <FontAwesome name="pause" color="white" size={65} />
     </RkButton>
@@ -61,7 +63,7 @@ export const goBackButton = (player, onComplete) => {
         player ? player.stopPlaying() : null;
       }}
     >
-      <RkText>Go Back</RkText>
+      <RkText style={{color: 'white'}}>Go Back</RkText>
     </RkButton>
   );
 };

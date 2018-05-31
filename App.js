@@ -68,6 +68,18 @@ export default class App extends Component {
             onComplete={this.recorderComplete.bind(this)}
             maxDurationMillis={150000}
             completeButtonText={'Finished'}
+            loadingButton={RecorderControls.loadingButton}
+            playButton={RecorderControls.playButton(this.state.recorder)}
+            playingButton={RecorderControls.playingButton(this.state.recorder)}
+            errorBadge={RecorderControls.errorBadge}
+            startRecordingButton={RecorderControls.startRecordingButton(this.state.recorder)}
+            stopRecordingButton={RecorderControls.stopRecordingButton(this.state.recorder)}
+            disabledRecordingButton={RecorderControls.disabledRecordingButton}
+            goBackButton={RecorderControls.goBackButton(
+              this.state.recorder,
+              this.recorderComplete
+            )}
+            showTimeStamp={true}
           />
         </View>
       );
@@ -81,24 +93,19 @@ export default class App extends Component {
         >
           <RkText>Sound Player</RkText>
           <Player
-            ref={(ref) => {
-              // shouldn't set state in the render function, but
-              // it'll only happen one time here
-              if (!this.state.player) {
-                this.setState({ player: ref });
-              }
-            }}
+            ref={(ref) => {this.player=ref}}
             style={{ flex: 1 }}
             uri={AUDIO_CLIP_URL}
             showDebug={true}
             loadingButton={PlayerControls.loadingButton}
-            playButton={PlayerControls.getPlayButton(this.state.player)}
-            playingButton={PlayerControls.playingButton(this.state.player)}
+            playButton={PlayerControls.playButton(this.player)}
+            playingButton={PlayerControls.playingButton(this.player)}
             errorBadge={PlayerControls.errorBadge}
             goBackButton={PlayerControls.goBackButton(
-              this.state.player,
+              this.player,
               this.playerComplete
             )}
+            showTimeStamp={true}
           />
         </View>
       );

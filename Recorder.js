@@ -8,14 +8,12 @@ import PropTypes from 'prop-types';
 import * as defaultProps from './defaults';
 import BlinkView from 'react-native-blink-view';
 import renderIf from 'render-if';
+import PlaybackBar from './PlaybackSlider';
+import TimeStamp from './TimeStamp';
 
-const GetRecordingButtonByStatus = props => {
+const getRecordingButtonByStatus = (props) => {};
 
-
-  
-
-const GetPlayButtonByStatus = props => {
-  
+const getPlayButtonByStatus = (props) => {
   if (!props.isRecordingComplete) {
     return (
       <View>
@@ -80,13 +78,13 @@ const GetPlayButtonByStatus = props => {
   }
 };
 
-const TimeStamp = props => {
-  /* 
+/* const TimeStamp = props => {
+  / 
   the 'call' statements below binds 'this' to the Recorder class
   I used this technique vice pulling out the relevant functions becasue
   I  knew that would work, and didn't want to incur risk by
   deviating from Expo's example too much
-   */
+   /
   if (props.showTimeStamp) {
     if (props.isRecording) {
       let recordTimeStamp = props.recordTimeStamp.call(props.parent);
@@ -120,27 +118,7 @@ const TimeStamp = props => {
   } else {
     return null;
   }
-};
-const PlaybackBar = props => {
-  return (
-    <View
-      style={{
-        height: 60,
-        width: props.width
-      }}
-    >
-      <Slider
-        trackStyle={sliderStyles.track}
-        thumbStyle={sliderStyles.thumb}
-        minimumTrackTintColor="#ec4c46"
-        minimimValue={0}
-        maximumValue={props.maximumValue}
-        value={props.value}
-        onSlidingComplete={props.onValueChange}
-      />
-    </View>
-  );
-};
+}; */
 
 export default class Recorder extends Component {
   constructor(props) {
@@ -169,39 +147,16 @@ export default class Recorder extends Component {
       JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY)
     );
   }
-
-  componentDidMount() {
-    // ask for permissions to use the device's audio
+  componentDidMount = () => {
     this.askForPermissions();
-    this.componentIsMounted = true;
-  }
-
-  renderRecordingButtonByStatus = () => {
-    let button;
-
-    if (props.isRecording) {
-      button = this.props.stopRecordingButton
-    } else {
-     // TODO: if not playing, display a green recording button
-     // TODO: else, display a disabled recording button
-      return (
-        <View>
-          <RkButton
-            rkType="success"
-            style={styles.roundButton}
-            onPress={props.onPress}
-          >
-            <FontAwesome name="microphone" color="white" size={75} />
-          </RkButton>
-        </View>
-      );
-    }
   };
 
-  addDebugStatement = statement => {
+  componentWillUnmount = () => {
     this.setState({
-      debugStatements: this.state.debugStatements.concat(`- ${statement}\n`)
+      isLoaded: false,
+      isBuffering: 'NOT_STARTED'
     });
+    this.sound.setOnPlaybackStatusUpdate(null);
   };
 
   askForPermissions = async () => {
@@ -211,10 +166,44 @@ export default class Recorder extends Component {
     });
   };
 
+  renderRecordingButtonByStatus = () => {
+    let button;
+
+    if (this.state.isPlaying) {
+      button = this.props.disabledRecordingButton;
+    } else {
+      if (this.state.isRecording) {
+        button = this.props.stopRecordingButton;
+      } else if (!this.state.isRecording) {
+        button = this.props.startRecordingButton;
+      }
+    }
+    return <View>{button}</View>;
+  };
+
+  renderPlayButtonByStatus = () => {
+    let button;
+    if (this.state.isRecording) {
+      button = this.props.disabledPlayButton;
+    } else {
+      if (this.state.isPlaying) {
+        button = this.props.playingButton;
+      } else if (!this.state.isPlaying) {
+        button = this.props.playButton;
+      }
+    }
+    return <View>{button}</View>;
+  };
+
+  addDebugStatement = (statement) => {
+    this.setState({
+      debugStatements: this.state.debugStatements.concat(`- ${statement}\n`)
+    });
+  };
+
   // TODO: fix this function being called
   // after the component has been unmounted
-  updateScreenForSoundStatus = status => {
-    // if (this.componentIsMounted) {
+  updateScreenForSoundStatus = (status) => {
     if (status.isLoaded) {
       let updatedPlaybackStatus = undefined;
       if (status.isPlaying) {
@@ -255,7 +244,7 @@ export default class Recorder extends Component {
   };
 
   // update the status and progress of recording
-  updateScreenForRecordingStatus = status => {
+  updateScreenForRecordingStatus = (status) => {
     if (status.canRecord) {
       this.setState({
         isRecording: status.isRecording,
@@ -385,7 +374,7 @@ export default class Recorder extends Component {
   /*
   Function used to update the UI during playback
   */
-  onPlaybackStatusUpdate = playbackStatus => {
+  onPlaybackStatusUpdate = (playbackStatus) => {
     if (!playbackStatus.isLoaded) {
       // Update your UI for the unloaded state
       if (playbackStatus.error) {
@@ -399,7 +388,9 @@ export default class Recorder extends Component {
       // Update the UI for the loaded state
       if (playbackStatus.isPlaying) {
         this.addDebugStatement(
-          `playbackStatus.positionMillis (here): ${playbackStatus.positionMillis}`
+          `playbackStatus.positionMillis (here): ${
+            playbackStatus.positionMillis
+          }`
         );
 
         // Update  UI for the playing state
@@ -444,7 +435,7 @@ export default class Recorder extends Component {
     const seconds = Math.floor(totalSeconds % 60);
     const minutes = Math.floor(totalSeconds / 60);
 
-    const padWithZero = number => {
+    const padWithZero = (number) => {
       const string = number.toString();
       if (number < 10) {
         return '0' + string;
@@ -529,7 +520,7 @@ export default class Recorder extends Component {
     }
   };
 
-  onSliderValueChange = value => {
+  onSliderValueChange = (value) => {
     // set the postion of the actual sound object
     this.addDebugStatement(`onSliderValueChange: ${value}`);
     this.sound.setPositionAsync(value);
@@ -570,7 +561,9 @@ export default class Recorder extends Component {
         });
       } else {
         this.addDebugStatement(
-          `Error onPlayPausePressed: unhandled state.playbackStatus ${this.state.playbackStatus}`
+          `Error onPlayPausePressed: unhandled state.playbackStatus ${
+            this.state.playbackStatus
+          }`
         );
       }
     }
@@ -579,36 +572,23 @@ export default class Recorder extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <GetRecordingButtonByStatus
-          onPress={this.onRecordPressed}
-          isRecording={this.state.isRecording}
-          isRecordingComplete={this.state.isRecordingComplete}
-        />
+        {this.renderRecordingButtonByStatus}
+        {this.renderPlayButtonByStatus}
 
-        <GetPlayButtonByStatus
-          isPlaying={this.state.isPlaying}
-          isRecordingComplete={this.state.isRecordingComplete}
-          playbackStatus={this.state.playbackStatus}
-          onPress={this.onPlayPausePressed}
-        />
         <PlaybackBar
           maximumValue={this.state.maxSliderValue}
-          onValueChange={this.onSliderValueChange}
           value={this.state.currentSliderValue}
-          width={this.progressBarWidth}
+          onSlidingComplete={this.onSliderValueChange}
         />
-        <TimeStamp
-          playbackTimeStamp={this.getPlaybackTimestamp}
-          recordTimeStamp={this.getRecordingTimestamp}
-          recordingDurationTimestamp={this.getRecordingDurationTimestamp}
-          playbackStatus={this.state.playbackStatus}
-          timeStampStyle={this.props.timeStampStyle}
-          isPlaying={this.state.isPlaying}
-          isRecording={this.state.isRecording}
-          isRecordingComplete={this.state.isRecordingComplete}
-          parent={this}
-          showTimeStamp={this.props.showTimeStamp}
-        />
+        {this.props.showTimeStamp ? (
+          <TimeStamp
+            playStatus={this.state.blinkTimeStamp}
+            timeStampStyle={this.props.timeStampStyle}
+            positionMillis={this.state.positionMillis}
+            durationMillis={this.state.durationMillis}
+          />
+        ) : null}
+
         <View style={{ alignSelf: 'stretch' }}>
           <RkButton
             rkType="danger stretch"
@@ -671,25 +651,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
-    },
+  },
   roundButton: {
     borderRadius: 50,
     width: 100,
     height: 100,
     alignSelf: 'center'
-  }
-});
-
-const sliderStyles = StyleSheet.create({
-  track: {
-    height: 18,
-    borderRadius: 1,
-    backgroundColor: '#d5d8e8'
-  },
-  thumb: {
-    width: 20,
-    height: 30,
-    borderRadius: 1,
-    backgroundColor: '#838486'
   }
 });

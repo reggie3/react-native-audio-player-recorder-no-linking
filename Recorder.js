@@ -1,200 +1,40 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
-import { RkButton, RkStyleSheet } from 'react-native-ui-kitten';
-import { FontAwesome } from '@expo/vector-icons';
-import Expo, { Audio, FileSystem, Permissions } from 'expo';
-import Slider from 'react-native-slider';
+import { RkButton } from 'react-native-ui-kitten';
+import { Audio, FileSystem, Permissions } from 'expo';
 import PropTypes from 'prop-types';
 import * as defaultProps from './defaults';
-import BlinkView from 'react-native-blink-view';
 import renderIf from 'render-if';
+import PlaybackSlider from './PlaybackSlider';
+import PlayTimeStamp from './PlayTimeStamp';
+import RecordTimeStamp from './RecordTimeStamp';
+import GetPlayButtonByStatus from './GetPlayButtonByStatus';
+import GetRecordButtonByStatus from './GetRecordButtonByStatus';
 
-const GetRecordingButtonByStatus = props => {
-  if (props.isRecording) {
-    return (
-      <View>
-        <RkButton
-          rkType="danger"
-          style={styles.roundButton}
-          onPress={props.onPress}
-        >
-          <FontAwesome name="stop" color="white" size={65} />
-        </RkButton>
-      </View>
-    );
-  } else if (props.isRecordingComplete) {
-    return (
-      <View>
-        <RkButton style={[styles.roundButton, { backgroundColor: 'gray' }]}>
-          <FontAwesome name="microphone" color="white" size={75} />
-        </RkButton>
-      </View>
-    );
-  } else {
-    return (
-      <View>
-        <RkButton
-          rkType="success"
-          style={styles.roundButton}
-          onPress={props.onPress}
-        >
-          <FontAwesome name="microphone" color="white" size={75} />
-        </RkButton>
-      </View>
-    );
-  }
+const initialState = {
+  playStatus: 'NO_SOUND_FILE_AVAILABLE',
+  recordStatus: 'NOT_STARTED',
+
+  // legacy
+  durationMillis: 0,
+  playbackMillis: 0,
+  recordingInformation: {},
+  recordingDuration: null,
+  soundDuration: null,
+  maxSliderValue: 0,
+  currentSliderValue: 0,
+  soundFileInfo: 'make a recording to see its information',
+  debugStatements: 'debug info will appear here'
 };
-
-const GetPlayButtonByStatus = props => {
-  
-  if (!props.isRecordingComplete) {
-    return (
-      <View>
-        <RkButton
-          style={[
-            styles.roundButton,
-            { backgroundColor: 'gray', paddingLeft: 25 }
-          ]}
-          onPress={() => {}}
-        >
-          <FontAwesome name="play" color="white" size={75} />
-        </RkButton>
-      </View>
-    );
-  } else {
-    if (props.playbackStatus === 'playing') {
-      return (
-        <View>
-          <RkButton
-            rkType="danger"
-            style={styles.roundButton}
-            onPress={props.onPress}
-          >
-            <FontAwesome name="pause" color="white" size={65} />
-          </RkButton>
-        </View>
-      );
-    } else if (
-      props.playbackStatus === 'stopped' ||
-      props.playbackStatus === 'paused'
-    ) {
-      return (
-        <View>
-          <RkButton
-            rkType="success"
-            style={[styles.roundButton, { paddingLeft: 25 }]}
-            onPress={props.onPress}
-          >
-            <FontAwesome name="play" color="white" size={75} />
-          </RkButton>
-        </View>
-      );
-    } else if (props.playbackStatus === 'buffering' || !props.playbackStatus) {
-      return (
-        <View>
-          <RkButton
-            style={[styles.roundButton, { backgroundColor: 'gray' }]}
-            onPress={props.onPress}
-          >
-            <FontAwesome name="hourglass" color="white" size={65} />
-          </RkButton>
-        </View>
-      );
-    } else {
-      return (
-        <View>
-          <Text>Uncaught playback status</Text>
-          <Text>status = {props.playbackStatus}</Text>
-        </View>
-      );
-    }
-  }
-};
-
-const TimeStamp = props => {
-  /* 
-  the 'call' statements below binds 'this' to the Recorder class
-  I used this technique vice pulling out the relevant functions becasue
-  I  knew that would work, and didn't want to incur risk by
-  deviating from Expo's example too much
-   */
-  if (props.showTimeStamp) {
-    if (props.isRecording) {
-      let recordTimeStamp = props.recordTimeStamp.call(props.parent);
-      return (
-        <BlinkView blinking={true} delay={500}>
-          <Text style={[props.timeStampStyle, { color: 'red' }]}>
-            {recordTimeStamp}
-          </Text>
-        </BlinkView>
-      );
-    }
-
-    if (props.playbackStatus === 'playing') {
-      let playbackTimeStamp = props.playbackTimeStamp.call(props.parent);
-      return <Text style={props.timeStampStyle}>{playbackTimeStamp}</Text>;
-    } else if (props.playbackStatus === 'paused') {
-      let playbackTimeStamp = props.playbackTimeStamp.call(props.parent);
-      return (
-        <BlinkView blinking={true} delay={750}>
-          <Text style={props.timeStampStyle}>{playbackTimeStamp}</Text>
-        </BlinkView>
-      );
-    } else {
-      let recordingDurationTimestamp = props.recordingDurationTimestamp.call(
-        props.parent
-      );
-      return (
-        <Text style={props.timeStampStyle}>{recordingDurationTimestamp}</Text>
-      );
-    }
-  } else {
-    return null;
-  }
-};
-const PlaybackBar = props => {
-  return (
-    <View
-      style={{
-        height: 60,
-        width: props.width
-      }}
-    >
-      <Slider
-        trackStyle={sliderStyles.track}
-        thumbStyle={sliderStyles.thumb}
-        minimumTrackTintColor="#ec4c46"
-        minimimValue={0}
-        maximumValue={props.maximumValue}
-        value={props.value}
-        onSlidingComplete={props.onValueChange}
-      />
-    </View>
-  );
-};
-
 export default class Recorder extends Component {
   constructor(props) {
     super(props);
-    const { height, width } = Dimensions.get('window');
+    const { width } = Dimensions.get('window');
     this.progressBarWidth = width * 0.9;
     this.sound = null;
     this.recording = null;
     this.state = {
-      isRecording: false,
-      isPlaying: false,
-      durationMillis: 0,
-      playbackMillis: 0,
-      isLoading: false,
-      recordingInformation: {},
-      isRecordingComplete: false,
-      playbackStatus: '',
-      recordingDuration: null,
-      soundDuration: null,
-      maxSliderValue: 0,
-      currentSliderValue: 0,
-      soundFileInfo: 'make a recording to see its information',
-      debugStatements: 'debug info will appear here'
+      ...initialState
     };
     this.recordingSettings = JSON.parse(
       JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY)
@@ -207,7 +47,7 @@ export default class Recorder extends Component {
     this.componentIsMounted = true;
   }
 
-  addDebugStatement = statement => {
+  addDebugStatement = (statement) => {
     this.setState({
       debugStatements: this.state.debugStatements.concat(`- ${statement}\n`)
     });
@@ -222,7 +62,7 @@ export default class Recorder extends Component {
 
   // TODO: fix this function being called
   // after the component has been unmounted
-  updateScreenForSoundStatus = status => {
+  updateScreenForSoundStatus = (status) => {
     // if (this.componentIsMounted) {
     if (status.isLoaded) {
       let updatedPlaybackStatus = undefined;
@@ -264,10 +104,10 @@ export default class Recorder extends Component {
   };
 
   // update the status and progress of recording
-  updateScreenForRecordingStatus = status => {
+  updateScreenForRecordingStatus = (status) => {
     if (status.canRecord) {
       this.setState({
-        isRecording: status.isRecording,
+        recordStatus: status.isRecording,
         recordingDuration: status.durationMillis,
         currentSliderValue: status.durationMillis
       });
@@ -290,10 +130,9 @@ export default class Recorder extends Component {
   Record sound
    */
   async stopPlaybackAndBeginRecording() {
-    this.setState({
-      isLoading: true
-    });
-    // check to see if there is already a sound object loaded
+    // check to see if there is already a sound object loaded and unload if it
+    // if there is
+    debugger;
     if (this.sound !== null) {
       try {
         await this.sound.unloadAsync().then(() => {
@@ -306,6 +145,8 @@ export default class Recorder extends Component {
       this.sound = null;
     }
 
+    // check to see if there is already a recording object loaded and unload if it
+    // if there is
     try {
       await Audio.setAudioModeAsync(this.props.audioMode);
       if (this.recording !== null) {
@@ -316,22 +157,23 @@ export default class Recorder extends Component {
       this.addDebugStatement(`Error: setAudioModeAsync ${error}`);
     }
 
+    // create a new recording object
+
     const recording = new Audio.Recording();
     try {
       await recording.prepareToRecordAsync(this.props.prepareToRecordParams);
       await recording.setProgressUpdateInterval(100);
-      await recording.startAsync(); // Will call this._updateScreenForRecordingStatus to update the screen.
+      // Will call this._updateScreenForRecordingStatus to update the screen.
+      await recording.startAsync();
+      this.setState({ recordStatus: 'RECORDING' });
     } catch (error) {
       this.addDebugStatement(`Error: startAsync: ${error}`);
+      this.setState({ recordStatus: 'ERROR' });
     }
     this.setState({ maxSliderValue: this.props.maxDurationMillis });
     recording.setOnRecordingStatusUpdate(this.updateScreenForRecordingStatus);
 
     this.recording = recording;
-
-    this.setState({
-      isLoading: false
-    });
   }
 
   /*
@@ -339,28 +181,43 @@ export default class Recorder extends Component {
    */
   async stopRecordingAndEnablePlayback() {
     this.setState({
-      isLoading: true
+      playStatus: 'LOADING',
+      recordStatus: 'BUFFERING'
     });
+    // stop and unload ongoing recording
     try {
       await this.recording.stopAndUnloadAsync();
-      this.addDebugStatement(' +++ unloading +++');
+      this.addDebugStatement(' +++ unloading recording before playing +++');
     } catch (error) {
       this.addDebugStatement(`Error: stopAndUnloadAsync ${error}`);
+      this.setState({
+        recordStatus: 'ERROR'
+      });
     }
 
+    // get the file info
     let info;
     try {
       info = await FileSystem.getInfoAsync(this.recording.getURI());
     } catch (error) {
       this.addDebugStatement(`Error: FileSystem.getInfoAsync ${error}`);
+      this.setState({
+        recordStatus: 'ERROR'
+      });
     }
 
     this.addDebugStatement(`FILE INFO: ${JSON.stringify(info)}`);
 
     try {
       await Audio.setAudioModeAsync(this.props.audioMode);
+      this.setState({
+        recordStatus: 'RECORDING_COMPLETE'
+      });
     } catch (error) {
       this.addDebugStatement(`Error: Audio.setAudioModeAsync ${error}`);
+      this.setState({
+        recordStatus: 'ERROR'
+      });
     }
 
     // now that recording is complete, create and load a new sound object
@@ -373,28 +230,26 @@ export default class Recorder extends Component {
       this.setState({
         soundFileInfo: { ...info, durationMillis: status.durationMillis }
       });
-      // connect the playback status function to this sound
-      //sound.setOnPlaybackStatusUpdate(this.onPlaybackStatusUpdate);
+
       this.setState({
         positionMillis: status.positionMillis,
         durationMillis: status.durationMillis,
         maxSliderValue: status.durationMillis,
         currentSliderValue: 0
-        // playbackStatus: 'stopped'
       });
       this.sound = sound;
     } catch (error) {
       this.addDebugStatement(`Error: createNewLoadedSound ${error}`);
     }
     this.setState({
-      isLoading: false
+      playbackStatus: 'STOPPED'
     });
   }
 
   /*
   Function used to update the UI during playback
   */
-  onPlaybackStatusUpdate = playbackStatus => {
+  onPlaybackStatusUpdate = (playbackStatus) => {
     if (!playbackStatus.isLoaded) {
       // Update your UI for the unloaded state
       if (playbackStatus.error) {
@@ -403,29 +258,35 @@ export default class Recorder extends Component {
           Please report this error as an issue.  Thank you!`
         );
         // Send Expo team the error on Slack or the forums so we can help you debug!
+        this.setState({
+          playbackStatus: 'ERROR'
+        });
       }
     } else {
       // Update the UI for the loaded state
       if (playbackStatus.isPlaying) {
         this.addDebugStatement(
-          `playbackStatus.positionMillis (here): ${playbackStatus.positionMillis}`
+          `playbackStatus.positionMillis (here): ${
+            playbackStatus.positionMillis
+          }`
         );
 
         // Update  UI for the playing state
         this.setState({
-          playbackStatus: 'playing',
+          playStatus: 'PLAYING',
           positionMillis: playbackStatus.positionMillis,
           currentSliderValue: playbackStatus.positionMillis
         });
       } else {
         if (
-          this.state.playbackStatus !== 'stopped' &&
-          this.state.playbackStatus !== 'buffering'
+          this.state.playStatus !== 'STOPPED' &&
+          this.state.playbackStatus !== 'BUFFERING' &&
+          this.state.playbackStatus !== 'LOADING'
         ) {
           // Update your UI for the paused state
-          this.addDebugStatement('playbackStatus is paused');
+          this.addDebugStatement('playStatus is paused');
           this.setState({
-            playbackStatus: 'paused',
+            playStatus: 'PAUSED',
             positionMillis: playbackStatus.positionMillis,
             currentSliderValue: playbackStatus.positionMillis
           });
@@ -435,59 +296,18 @@ export default class Recorder extends Component {
       if (playbackStatus.isBuffering) {
         // Update your UI for the buffering state
         this.addDebugStatement('playbackStatus is buffering');
-        this.setState({ playbackStatus: 'buffering' });
+        this.setState({ playStatus: 'BUFFERING' });
       }
 
       if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
         this.addDebugStatement('playbackStatus is stopped');
         this.setState({
-          playbackStatus: 'stopped',
+          playStatus: 'STOPPED',
           isPlaying: false
         });
       }
     }
   };
-
-  getMMSSFromMillis(millis) {
-    const totalSeconds = millis / 1000;
-    const seconds = Math.floor(totalSeconds % 60);
-    const minutes = Math.floor(totalSeconds / 60);
-
-    const padWithZero = number => {
-      const string = number.toString();
-      if (number < 10) {
-        return '0' + string;
-      }
-      return string;
-    };
-    return padWithZero(minutes) + ':' + padWithZero(seconds);
-  }
-
-  getRecordingDurationTimestamp() {
-    if (this.state.isRecordingComplete) {
-      return this.getMMSSFromMillis(this.state.durationMillis);
-    }
-    return '00:00';
-  }
-  getPlaybackTimestamp() {
-    if (
-      this.sound != null &&
-      this.state.positionMillis != null &&
-      this.state.durationMillis != null
-    ) {
-      return `${this.getMMSSFromMillis(
-        this.state.positionMillis
-      )} / ${this.getMMSSFromMillis(this.state.durationMillis)}`;
-    }
-    return '';
-  }
-
-  getRecordingTimestamp() {
-    if (this.state.recordingDuration != null) {
-      return `${this.getMMSSFromMillis(this.state.recordingDuration)}`;
-    }
-    return `${this.getMMSSFromMillis(0)}`;
-  }
 
   resetPressed = () => {
     this.resetRecordingState();
@@ -497,26 +317,14 @@ export default class Recorder extends Component {
     this.sound = null;
     this.recording = null;
     this.setState({
-      isRecording: false,
-      isPlaying: false,
-      durationMillis: 0,
-      playbackMillis: 0,
-      isLoading: false,
-      recordingInformation: {},
-      isRecordingComplete: false,
-      playbackStatus: '',
-      recordingDuration: null,
-      soundDuration: null,
-      maxSliderValue: 0,
-      currentSliderValue: 0,
-      soundFileInfo: 'no info yet'
+      ...initialState
     });
   };
 
   // perform this action when the user presses the "done" key
   onComplete = async () => {
     // need to check if sound has been set to null in case the user
-    // has recorded soemthing, then did a reset, and then clicks the finish button
+    // has recorded something, then did a reset, and then clicks the finish button
     if (this.sound !== null) {
       try {
         await this.sound.unloadAsync().then(() => {
@@ -538,86 +346,112 @@ export default class Recorder extends Component {
     }
   };
 
-  onSliderValueChange = value => {
+  onSliderValueChange = (value) => {
     // set the postion of the actual sound object
     this.addDebugStatement(`onSliderValueChange: ${value}`);
     this.sound.setPositionAsync(value);
   };
 
-  onRecordPressed = () => {
-    if (this.state.isRecording) {
-      this.stopRecordingAndEnablePlayback();
-    } else {
+  onStartRecordingPress = () => {
       this.stopPlaybackAndBeginRecording();
-    }
   };
 
-  onPlayPausePressed = () => {
-    if (this.sound != null) {
-      if (this.state.playbackStatus === 'playing') {
-        this.sound.pauseAsync().then(() => {
-          this.setState({ isPlaying: false, playbackStatus: 'paused' });
-        });
-      } else if (this.state.playbackStatus === 'stopped') {
-        // check to see if the entire audio has finished playing, and if so
-        // reset to the beginning and play it
-        if (this.state.positionMillis === this.state.durationMillis) {
-          this.sound.stopAsync().then(() => {
-            this.sound.playAsync().then(() => {
-              this.setState({ isPlaying: true, playbackStatus: 'playing' });
-            });
-          });
-        } else {
-          // just play from wherever we are
+  onStopRecordingPress=()=>{
+    this.stopRecordingAndEnablePlayback();
+  }
+
+  onPlayPress=()=>{
+    if (this.state.playStatus === 'PAUSED') {
+      this.sound.playAsync().then(() => {
+        this.setState({ playStatus: 'PLAYING' });
+      });
+    } else if (this.state.playStatus === 'STOPPED') {
+      // check to see if the entire audio has finished playing, and if so
+      // reset to the beginning and play it
+      if (this.state.positionMillis === this.state.durationMillis) {
+        this.sound.stopAsync().then(() => {
           this.sound.playAsync().then(() => {
-            this.setState({ isPlaying: true, playbackStatus: 'playing' });
+            this.setState({ playStatus: 'PLAYING' });
           });
-        }
-      } else if (this.state.playbackStatus === 'paused') {
-        this.sound.playAsync().then(() => {
-          this.setState({ isPlaying: true, playbackStatus: 'playing' });
         });
       } else {
-        this.addDebugStatement(
-          `Error onPlayPausePressed: unhandled state.playbackStatus ${this.state.playbackStatus}`
-        );
+        // just play from wherever we are
+        this.sound.playAsync().then(() => {
+          this.setState({ playStatus: 'PLAYING' });
+        });
       }
+    }else {
+      this.addDebugStatement(
+        `Error onPlayPress: unexpected state.playStatus ${
+          this.state.playStatus
+        }`
+      );
+    }
+  }
+  
+  onPausePress=()=>{
+    if (this.sound != null) {
+      if (this.state.playStatus === 'PLAYING') {
+        this.sound.pauseAsync().then(() => {
+          this.setState({ playStatus: 'PAUSED' });
+        });
+      } 
+    }
+  }
+
+  renderTimeStamp = () => {
+    if (this.state.playStatus === 'PLAYING') {
+      return (
+        <PlayTimeStamp
+          playStatus={this.state.playStatus}
+          recordStatus={this.state.recordStatus}
+          sound={this.sound}
+          positionMillis={this.state.positionMillis}
+          durationMillis={this.state.durationMillis}
+          timeStampStyle={this.props.timeStampStyle}
+        />
+      );
+    } else {
+      return (
+        <RecordTimeStamp
+          recordStatus={this.state.recordStatus}
+          playStatus={this.state.playStatus}
+          sound={this.sound}
+          recordTimeStamp={this.getRecordingTimestamp}
+          recordingDurationTimestamp={this.getRecordingDurationTimestamp}
+          timeStampStyle={this.props.timeStampStyle}
+        />
+      );
     }
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <GetRecordingButtonByStatus
-          onPress={this.onRecordPressed}
-          isRecording={this.state.isRecording}
-          isRecordingComplete={this.state.isRecordingComplete}
+        <GetRecordButtonByStatus
+           onStartRecordingPress={this.onStartRecordingPress.bind(this)}
+           onStopRecordingPress={this.onStopRecordingPress.bind(this)}
+          recordStatus={this.state.recordStatus}
+          playStatus={this.state.playStatus}
         />
 
         <GetPlayButtonByStatus
-          isPlaying={this.state.isPlaying}
-          isRecordingComplete={this.state.isRecordingComplete}
-          playbackStatus={this.state.playbackStatus}
-          onPress={this.onPlayPausePressed}
+          recordStatus={this.state.recordStatus}
+          playStatus={this.state.playStatus}
+          onPlayPress={this.onPlayPress.bind(this)}
+          onPausePress={this.onPausePress.bind(this)}
         />
-        <PlaybackBar
-          maximumValue={this.state.maxSliderValue}
-          onValueChange={this.onSliderValueChange}
-          value={this.state.currentSliderValue}
-          width={this.progressBarWidth}
-        />
-        <TimeStamp
-          playbackTimeStamp={this.getPlaybackTimestamp}
-          recordTimeStamp={this.getRecordingTimestamp}
-          recordingDurationTimestamp={this.getRecordingDurationTimestamp}
-          playbackStatus={this.state.playbackStatus}
-          timeStampStyle={this.props.timeStampStyle}
-          isPlaying={this.state.isPlaying}
-          isRecording={this.state.isRecording}
-          isRecordingComplete={this.state.isRecordingComplete}
-          parent={this}
-          showTimeStamp={this.props.showTimeStamp}
-        />
+        {this.props.showPlaybackSlider ? (
+          <PlaybackSlider
+            maximumValue={this.state.maxSliderValue}
+            onValueChange={this.onSliderValueChange}
+            value={this.state.currentSliderValue}
+            width={this.progressBarWidth}
+          />
+        ) : null}
+
+        {this.props.showTimeStamp ? this.renderTimeStamp() : null}
+
         <View style={{ alignSelf: 'stretch' }}>
           <RkButton
             rkType="danger stretch"
@@ -661,6 +495,7 @@ Recorder.propTypes = {
   audioMode: PropTypes.object,
   timeStampStyle: PropTypes.object,
   showTimeStamp: PropTypes.bool,
+  showPlaybackSlider: PropTypes.bool,
   showDebug: PropTypes.bool
 };
 
@@ -671,6 +506,7 @@ Recorder.defaultProps = {
   maxDurationMillis: 600000,
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true,
+  showPlaybackSlider: true,
   showDebug: false
 };
 
@@ -680,25 +516,5 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
-    },
-  roundButton: {
-    borderRadius: 50,
-    width: 100,
-    height: 100,
-    alignSelf: 'center'
-  }
-});
-
-const sliderStyles = StyleSheet.create({
-  track: {
-    height: 18,
-    borderRadius: 1,
-    backgroundColor: '#d5d8e8'
-  },
-  thumb: {
-    width: 20,
-    height: 30,
-    borderRadius: 1,
-    backgroundColor: '#838486'
   }
 });

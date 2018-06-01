@@ -17,9 +17,10 @@ const initialState = {
   // legacy
   durationMillis: 0,
   playbackMillis: 0,
+  positionMillis: 0,
   recordingInformation: {},
-  recordingDuration: null,
-  soundDuration: null,
+  recordingDuration: 0,
+  soundDuration: 0,
   maxSliderValue: 0,
   currentSliderValue: 0,
   soundFileInfo: 'make a recording to see its information',
@@ -148,6 +149,7 @@ export default class Recorder extends Component {
     // if there is
     if (this.sound !== null) {
       try {
+        this.sound.setOnPlaybackStatusUpdate(null);
         await this.sound.unloadAsync().then(() => {
           this.addDebugStatement('******** sound unloaded ********');
         });
@@ -205,6 +207,7 @@ export default class Recorder extends Component {
     // stop and unload ongoing recording
     try {
       await this.recording.stopAndUnloadAsync();
+      this.recording.setOnRecordingStatusUpdate(null);
       this.addDebugStatement(' +++ unloading recording before playing +++');
       this.setState({
         playStatus: 'STOPPED',
@@ -273,75 +276,84 @@ export default class Recorder extends Component {
   Function used to update the UI during playback
   */
   onPlaybackStatusUpdate = (playbackStatus) => {
-    if (!playbackStatus.isLoaded) {
-      // Update your UI for the unloaded state
-      if (playbackStatus.error) {
-        this.addDebugStatement(
-          `Encountered a fatal error during playback: ${playbackStatus.error}
+    if (this.state.recordStatus !== 'RECORDING') {
+      if (!playbackStatus.isLoaded) {
+        // Update your UI for the unloaded state
+        if (playbackStatus.error) {
+          this.addDebugStatement(
+            `Encountered a fatal error during playback: ${playbackStatus.error}
           Please report this error as an issue.  Thank you!`
-        );
-        // Send Expo team the error on Slack or the forums so we can help you debug!
-        this.setState({
-          playStatus: 'ERROR'
-        });
-      }
-    } else {
-      // Update the UI for the loaded state
-      if (playbackStatus.isPlaying) {
-        this.addDebugStatement(
-          `playbackStatus.positionMillis (here): ${
-            playbackStatus.positionMillis
-          }`
-        );
-
-        // Update  UI for the playing state
-        this.setState({
-          playStatus: 'PLAYING',
-          positionMillis: playbackStatus.positionMillis,
-          currentSliderValue: playbackStatus.positionMillis
-        });
-      } else {
-        if (
-          this.state.playStatus !== 'STOPPED' &&
-          this.state.playStatus !== 'BUFFERING' &&
-          this.state.playStatus !== 'LOADING'
-        ) {
-          // Update your UI for the paused state
-          this.addDebugStatement('playStatus is paused');
+          );
+          // Send Expo team the error on Slack or the forums so we can help you debug!
           this.setState({
-            playStatus: 'PAUSED',
+            playStatus: 'ERROR'
+          });
+        }
+      } else {
+        // Update the UI for the loaded state
+        if (playbackStatus.isPlaying) {
+          this.addDebugStatement(
+            `playbackStatus.positionMillis (here): ${
+              playbackStatus.positionMillis
+            }`
+          );
+
+          // Update  UI for the playing state
+          this.setState({
+            playStatus: 'PLAYING',
             positionMillis: playbackStatus.positionMillis,
             currentSliderValue: playbackStatus.positionMillis
           });
+        } else {
+          if (
+            this.state.playStatus !== 'STOPPED' &&
+            this.state.playStatus !== 'BUFFERING' &&
+            this.state.playStatus !== 'LOADING' &&
+            this.state.playStatus !== 'NO_SOUND_FILE_AVAILABLE' &&
+            this.state.playStatus !== 'PLAYING'
+          ) {
+            // Update your UI for the paused state
+            this.addDebugStatement('playStatus is paused');
+            this.setState({
+              positionMillis: playbackStatus.positionMillis,
+              currentSliderValue: playbackStatus.positionMillis,
+              durationMillis: playbackStatus.durationMillis
+            });
+          }
         }
-      }
 
-      if (playbackStatus.isBuffering) {
-        // Update your UI for the buffering state
-        this.addDebugStatement('playbackStatus is buffering');
-        this.setState({ playStatus: 'BUFFERING' });
-      }
+        if (playbackStatus.isBuffering) {
+          // Update your UI for the buffering state
+          this.addDebugStatement('playbackStatus is buffering');
+          this.setState({ playStatus: 'BUFFERING' });
+        }
 
-      if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
-        this.addDebugStatement('playbackStatus is stopped');
-        this.setState({
-          playStatus: 'STOPPED',
-          isPlaying: false
-        });
+        if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
+          this.addDebugStatement('playbackStatus is stopped');
+          this.setState({
+            positionMillis: playbackStatus.durationMillis,
+            currentSliderValue: playbackStatus.durationMillis,
+            durationMillis: playbackStatus.durationMillis,
+            playStatus: 'STOPPED',
+            isPlaying: false
+          });
+        }
       }
     }
   };
 
-  resetPressed = () => {
+  onReset = () => {
     this.resetRecordingState();
   };
 
   resetRecordingState = () => {
     this.sound = null;
     this.recording = null;
-    this.setState({
-      ...initialState
-    });
+    this.setState(
+      {
+        ...initialState
+      }
+    );
   };
 
   // perform this action when the user presses the "done" key
@@ -478,7 +490,7 @@ export default class Recorder extends Component {
         <View style={{ alignSelf: 'stretch' }}>
           <RkButton
             rkType="danger stretch"
-            onPress={this.resetPressed.bind(this)}
+            onPress={this.onReset.bind(this)}
             style={{ marginVertical: 5 }}
           >
             Reset

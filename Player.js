@@ -57,8 +57,7 @@ export default class Player extends Component {
       this.sound = sound;
     } catch (error) {
       // An error occurred!
-      console.warn(error);
-      //debugger;
+      console.warn(`Player.js loadSound error : ${error}`);
     }
   };
 
@@ -172,7 +171,6 @@ export default class Player extends Component {
       if (this.state.positionMillis === this.state.durationMillis) {
         this.sound.stopAsync().then(() => {
           this.sound.playAsync().then(() => {
-            debugger;
             this.setState({ playStatus: 'PLAYING' });
           });
         });
@@ -184,7 +182,7 @@ export default class Player extends Component {
             this.setState({ playStatus: 'PLAYING' });
           })
           .catch((err) => {
-            debugger;
+            console.warn(`Player.js onPlayPress error: ${err}`)
           });
       }
     }

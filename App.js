@@ -1,13 +1,13 @@
-import 'expo';
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Recorder from './Recorder';
 import Player from './Player';
 import { Constants } from 'expo';
 import { RkButton, RkText } from 'react-native-ui-kitten';
+// "http://res.cloudinary.com/tourystory/video/upload/v1516221224/audioclips/eaffcf76b6cbf5032634150b69286ccab489e66040b0508d81f2ce0478a41036-a987f707-552d-eeea-baea-2b1731b429a0.mp4");
 
 const AUDIO_CLIP_URL = encodeURI(
-"http://res.cloudinary.com/tourystory/video/upload/v1516221224/audioclips/eaffcf76b6cbf5032634150b69286ccab489e66040b0508d81f2ce0478a41036-a987f707-552d-eeea-baea-2b1731b429a0.mp4");
+"https://upload.wikimedia.org/wikipedia/commons/3/3d/Africanagogosound.ogg");
 export default class App extends Component {
   constructor(props) {
     super(props);

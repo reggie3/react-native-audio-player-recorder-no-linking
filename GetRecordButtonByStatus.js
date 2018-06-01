@@ -57,8 +57,7 @@ const GetRecordButtonByStatus = (props) => {
         </RkButton>
       );
     } else {
-      debugger;
-        console.log(`GetRecordButtonByStatus: unknown recordStatus ${props.recordStatus}`)
+        console.warn(`GetRecordButtonByStatus: unknown recordStatus ${props.recordStatus}`)
       return (
         <RkButton rkType="danger" style={roundButtonStyle} onPress={() => {}}>
           <FontAwesome name="question-circle" color="white" size={55} />

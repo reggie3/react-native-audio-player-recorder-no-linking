@@ -78,8 +78,7 @@ const GetPlayButtonByStatus = (props) => {
         </RkButton>
       );
     } else {
-      debugger;
-      console.log(
+      console.warn(
         `GetPlayButtonByStatus: unknown playStatus ${props.playStatus}`
       );
       return (

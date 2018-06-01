@@ -27,20 +27,12 @@ const RecordTimeStamp = (props) => {
 
 
   const getRecordingTimestamp=()=> {
-    debugger;
     if (props.recordingDuration != null) {
       return `${getMMSSFromMillis(props.recordingDuration)}`;
     }
     return `${getMMSSFromMillis(0)}`;
   }
 
-  /* 
-    the 'call' statements below binds 'this' to the Player class
-    I used this technique vice pulling out the relevant functions becasue
-    I  knew that would work, and didn't want to incur risk by
-    deviating from Expo's example too much
-     */
-    debugger;
     if (props.recordStatus==='RECORDING') {
     
       return (

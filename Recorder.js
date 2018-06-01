@@ -4,7 +4,6 @@ import { RkButton } from 'react-native-ui-kitten';
 import { Audio, FileSystem, Permissions } from 'expo';
 import PropTypes from 'prop-types';
 import * as defaultProps from './defaults';
-import renderIf from 'render-if';
 import PlaybackSlider from './PlaybackSlider';
 import PlayTimeStamp from './PlayTimeStamp';
 import RecordTimeStamp from './RecordTimeStamp';
@@ -72,7 +71,7 @@ export default class Recorder extends Component {
   // TODO: fix this function being called
   // after the component has been unmounted
   updateScreenForSoundStatus = (status) => {
-    // 
+    //
     // if (this.componentIsMounted) {
     if (status.isLoaded) {
       let updatedPlaybackStatus = undefined;
@@ -115,14 +114,13 @@ export default class Recorder extends Component {
 
   // update the status and progress of recording
   updateScreenForRecordingStatus = (status) => {
-    // 
+    //
     if (!status.isRecording) {
       this.setState({
-        recordStatus: 'NOT_RECORDING',
+        recordStatus: 'NOT_RECORDING'
       });
       this.addDebugStatement(`NOT_RECORDING: ${status.durationMillis}`);
     } else if (status.isRecording) {
-      
       this.setState({
         recordStatus: 'RECORDING',
         recordingDuration: status.durationMillis,
@@ -176,21 +174,21 @@ export default class Recorder extends Component {
     const recording = new Audio.Recording();
     try {
       await recording.prepareToRecordAsync(this.props.prepareToRecordParams);
-      recording.setOnRecordingStatusUpdate(this.updateScreenForRecordingStatus.bind(this));
+      recording.setOnRecordingStatusUpdate(
+        this.updateScreenForRecordingStatus.bind(this)
+      );
 
       // await recording.setProgressUpdateInterval(100);
-      
+
       let res = await recording.startAsync();
-      
+
       this.setState({
         recordStatus: 'RECORDING',
         maxSliderValue: this.props.maxDurationMillis
       });
       this.recording = recording;
-      
     } catch (error) {
-      
-      console.log(`Error: startAsync: ${error}`)
+      console.log(`Error: startAsync: ${error}`);
       this.addDebugStatement(`Error: startAsync: ${error}`);
       this.setState({ recordStatus: 'ERROR' });
     }
@@ -243,7 +241,7 @@ export default class Recorder extends Component {
         recordStatus: 'ERROR'
       });
     }
-    
+
     // now that recording is complete, create and load a new sound object
     // to save to component state so that it can be played back later
     try {
@@ -447,7 +445,7 @@ export default class Recorder extends Component {
         />
       );
     }
-    return <Text style={this.props.timeStampStyle}>{' '}</Text>
+    return <Text style={this.props.timeStampStyle}> </Text>;
   };
 
   render() {
@@ -492,7 +490,7 @@ export default class Recorder extends Component {
           >
             {this.props.completeButtonText}
           </RkButton>
-          {renderIf(this.props.showDebug)(
+          {this.props.showDebug ? (
             <ScrollView
               style={{
                 backgroundColor: '#FAFAD2',
@@ -506,7 +504,7 @@ export default class Recorder extends Component {
                 {this.state.debugStatements}
               </Text>
             </ScrollView>
-          )}
+          ) : null}
         </View>
       </View>
     );

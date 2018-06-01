@@ -1,12 +1,12 @@
-# React Native Sound Recorder (No Native)
+# React Native Sound Audio Player Recorder No Linking
 
-## A simple drop in sound recorder component for react native applications.  
+## This package provides simple .  
 This module makes extensive use of the Expo.io Audio SDK located [here](https://docs.expo.io/versions/latest/sdk/audio.html).  It includes a sensible set of audio setup defaults, but can be customised using the information contained in the expo.io documentation.
 
-[![npm](https://img.shields.io/npm/v/react-native-sound-recorder-no-native.svg)](https://www.npmjs.com/package/react-native-sound-recorder-no-native)
-[![npm](https://img.shields.io/npm/dm/react-native-sound-recorder-no-native.svg)](https://www.npmjs.com/package/react-native-sound-recorder-no-native)
-[![npm](https://img.shields.io/npm/dt/react-native-sound-recorder-no-native.svg)](https://www.npmjs.com/package/react-native-sound-recorder-no-native)
-[![npm](https://img.shields.io/npm/l/react-native-sound-recorder-no-native.svg)](https://github.com/react-native-component/react-native-sound-recorder-no-native/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/v/react-native-audio-player-recorder-no-linking.svg)](https://www.npmjs.com/package/react-native-audio-player-recorder-no-linking)
+[![npm](https://img.shields.io/npm/dm/react-native-audio-player-recorder-no-linking.svg)](https://www.npmjs.com/package/react-native-audio-player-recorder-no-linking)
+[![npm](https://img.shields.io/npm/dt/react-native-audio-player-recorder-no-linking.svg)](https://www.npmjs.com/package/react-native-audio-player-recorder-no-linking)
+[![npm](https://img.shields.io/npm/l/react-native-audio-player-recorder-no-linking.svg)](https://github.com/react-native-component/react-native-audio-player-recorder-no-linking/blob/master/LICENSE)
 
 ## Why Use This?
 
@@ -18,11 +18,11 @@ You are not restricted from using native code, and can find a better module to u
 
 ## Installation
 
-`npm install --save react-native-sound-recorder-no-native`
+`npm install --save react-native-audio-player-recorder-no-linking`
 
 ## Usage
 
-`import SoundRecorder from 'react-native-sound-recorder-no-native';`
+`import SoundRecorder from 'react-native-audio-player-recorder-no-linking';`
 
 ### Example
 

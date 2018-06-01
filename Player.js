@@ -4,12 +4,12 @@ import { RkButton } from 'react-native-ui-kitten';
 import { Audio } from 'expo';
 import PropTypes from 'prop-types';
 import * as defaultProps from './defaults';
-import renderIf from 'render-if';
 import PlayTimeStamp from './PlayTimeStamp';
 import PlaybackSlider from './PlaybackSlider';
-import GetPlayButtonByStatus from './GetPlayButtonByStatus'
+import GetPlayButtonByStatus from './GetPlayButtonByStatus';
 
-const initialState ={ isLoaded: false,
+const initialState = {
+  isLoaded: false,
   isBuffering: 'NOT_STARTED',
   playStatus: 'LOADING', // LOADING, BUFFERING, PAUSED, STOPPED, PLAYING
 
@@ -19,15 +19,16 @@ const initialState ={ isLoaded: false,
   playbackMillis: 0,
   maxSliderValue: 0,
   currentSliderValue: 0,
-  debugStatements: 'debug info will appear here'}
+  debugStatements: 'debug info will appear here'
+};
 export default class Player extends Component {
   constructor(props) {
     super(props);
-    const {  width } = Dimensions.get('window');
+    const { width } = Dimensions.get('window');
     this.progressBarWidth = width * 0.9;
     this.sound = null;
     this.state = {
-     ... initialState
+      ...initialState
     };
   }
 
@@ -68,7 +69,7 @@ export default class Player extends Component {
   };
 
   componentWillUnmount = () => {
-    this.setState({...initialState});
+    this.setState({ ...initialState });
     this.sound.setOnPlaybackStatusUpdate(null);
   };
   /*
@@ -192,13 +193,12 @@ export default class Player extends Component {
   render() {
     return (
       <View style={styles.container}>
-        
-          <GetPlayButtonByStatus
-            playStatus={this.state.playStatus}
-            onPlayPress={this.onPlayPress.bind(this)}
-            onPausePress={this.onPausePress.bind(this)}
-          />
-        
+        <GetPlayButtonByStatus
+          playStatus={this.state.playStatus}
+          onPlayPress={this.onPlayPress.bind(this)}
+          onPausePress={this.onPausePress.bind(this)}
+        />
+
         {this.props.showPlaybackSlider ? (
           <PlaybackSlider
             maximumValue={this.state.maxSliderValue}
@@ -226,7 +226,7 @@ export default class Player extends Component {
             {this.props.completeButtonText}
           </RkButton>
 
-          {renderIf(this.props.showDebug)(
+          {this.props.showDebug ? (
             <ScrollView
               style={{
                 backgroundColor: '#FAFAD2',
@@ -240,7 +240,7 @@ export default class Player extends Component {
                 {this.state.debugStatements}
               </Text>
             </ScrollView>
-          )}
+          ) : null}
         </View>
       </View>
     );
@@ -272,6 +272,5 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center'
-  },
-
+  }
 });

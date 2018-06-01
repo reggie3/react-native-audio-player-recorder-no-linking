@@ -2,43 +2,40 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": false,
   "dependencies": {
-    "deep-diff": "^1.0.1",
-    "expo": "^27.0.2",
-    "install": "^0.10.2",
     "prop-types": "15.6.1",
-    "react": "16.3.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz",
     "react-native-blink-view": "0.0.6",
     "react-native-slider": "^0.11.0",
     "react-native-ui-kitten": "^3.0.1",
-    "render-if": "^0.1.1"
+    "expo": "^27.0.0",
+    "react": "16.3.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz"
   },
-  "name": "react-native-sound-recorder-no-native",
-  "version": "0.0.71",
+  "name": "react-native-audio-player-recorder-no-linking",
+  "version": "0.0.2",
   "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-bump": "^3.1.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-json-editor": "^2.4.1",
+    "gulp-run": "^1.7.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prod": "npm run clean && SET NODE_ENV=PROD && webpack",
+    "dev": "npm run clean && SET NODE_ENV=DEV && webpack -p",
+    "clean": "rimraf ./dist",
+    "test": "jest",
+    "test-watch": "jest --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reggie3/react-native-expo-sound-recorder.git"
+    "url": "git+https://github.com/reggie3/react-native-audio-player-recorder-no-linking.git"
   },
-  "keywords": [
-    "react-native",
-    "expo.io",
-    "audio",
-    "recorder",
-    "javascript"
-  ],
-  "files": [
-    "defaults.js",
-    "SoundRecorder.js"
-  ],
+  "keywords": ["react-native", "expo.io", "audio", "player", "recorder", "javascript"],
   "author": "Reginald Johnson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/reggie3/react-native-expo-sound-recorder/issues"
+    "url": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking/issues"
   },
-  "homepage": "https://github.com/reggie3/react-native-expo-sound-recorder#readme"
+  "homepage": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking#readme"
 }

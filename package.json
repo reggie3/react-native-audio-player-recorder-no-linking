@@ -1,0 +1,44 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "private": false,
+  "dependencies": {
+    "deep-diff": "^1.0.1",
+    "expo": "^27.0.2",
+    "install": "^0.10.2",
+    "prop-types": "15.6.1",
+    "react": "16.3.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz",
+    "react-native-blink-view": "0.0.6",
+    "react-native-slider": "^0.11.0",
+    "react-native-ui-kitten": "^3.0.1",
+    "render-if": "^0.1.1"
+  },
+  "name": "react-native-sound-recorder-no-native",
+  "version": "0.0.71",
+  "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reggie3/react-native-expo-sound-recorder.git"
+  },
+  "keywords": [
+    "react-native",
+    "expo.io",
+    "audio",
+    "recorder",
+    "javascript"
+  ],
+  "files": [
+    "defaults.js",
+    "SoundRecorder.js"
+  ],
+  "author": "Reginald Johnson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reggie3/react-native-expo-sound-recorder/issues"
+  },
+  "homepage": "https://github.com/reggie3/react-native-expo-sound-recorder#readme"
+}

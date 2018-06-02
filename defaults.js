@@ -16,6 +16,6 @@ export const prepareToRecordParams = Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
 
 export const timeStampStyle = {
     color: 'blue',
-    fontSize: 40
+    fontSize: 24
 }
 

@@ -29,8 +29,6 @@ const initialState = {
 export default class Recorder extends Component {
   constructor(props) {
     super(props);
-    const { width } = Dimensions.get('window');
-    this.progressBarWidth = width * 0.9;
     this.sound = null;
     this.recording = null;
     this.state = {
@@ -349,11 +347,9 @@ export default class Recorder extends Component {
   resetRecordingState = () => {
     this.sound = null;
     this.recording = null;
-    this.setState(
-      {
-        ...initialState
-      }
-    );
+    this.setState({
+      ...initialState
+    });
   };
 
   // perform this action when the user presses the "done" key
@@ -477,12 +473,21 @@ export default class Recorder extends Component {
           onPausePress={this.onPausePress.bind(this)}
         />
         {this.props.showPlaybackSlider ? (
-          <PlaybackSlider
-            maximumValue={this.state.maxSliderValue}
-            onValueChange={this.onSliderValueChange}
-            value={this.state.currentSliderValue}
-            width={this.progressBarWidth}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              margin: 5
+            }}
+          >
+            <PlaybackSlider
+              maximumValue={this.state.maxSliderValue}
+              onValueChange={this.onSliderValueChange}
+              value={this.state.currentSliderValue}
+              width={this.progressBarWidth}
+            />
+          </View>
         ) : null}
 
         {this.props.showTimeStamp ? this.renderTimeStamp() : null}

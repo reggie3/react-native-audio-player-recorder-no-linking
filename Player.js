@@ -24,8 +24,6 @@ const initialState = {
 export default class Player extends Component {
   constructor(props) {
     super(props);
-    const { width } = Dimensions.get('window');
-    this.progressBarWidth = width * 0.9;
     this.sound = null;
     this.state = {
       ...initialState
@@ -182,7 +180,7 @@ export default class Player extends Component {
             this.setState({ playStatus: 'PLAYING' });
           })
           .catch((err) => {
-            console.warn(`Player.js onPlayPress error: ${err}`)
+            console.warn(`Player.js onPlayPress error: ${err}`);
           });
       }
     }
@@ -198,12 +196,20 @@ export default class Player extends Component {
         />
 
         {this.props.showPlaybackSlider ? (
-          <PlaybackSlider
-            maximumValue={this.state.maxSliderValue}
-            onValueChange={this.onSliderValueChange}
-            value={this.state.currentSliderValue}
-            width={this.progressBarWidth}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              margin: 5
+            }}
+          >
+            <PlaybackSlider
+              maximumValue={this.state.maxSliderValue}
+              onValueChange={this.onSliderValueChange}
+              value={this.state.currentSliderValue}
+            />
+          </View>
         ) : null}
         {this.props.showTimeStamp ? (
           <PlayTimeStamp

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { RkButton } from 'react-native-ui-kitten';
 import { Audio } from 'expo';
 import PropTypes from 'prop-types';

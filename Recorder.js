@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { RkButton } from 'react-native-ui-kitten';
 import { Audio, FileSystem, Permissions } from 'expo';
 import PropTypes from 'prop-types';
@@ -180,7 +180,7 @@ export default class Recorder extends Component {
 
       // await recording.setProgressUpdateInterval(100);
 
-      let res = await recording.startAsync();
+       await recording.startAsync();
 
       this.setState({
         recordStatus: 'RECORDING',

@@ -16,18 +16,22 @@ This module makes extensive use of the Expo.io Audio SDK located [here](https://
 This module is useful if you need  drop in sound recorder or player components for an application in which using platform specific native code is prohibited; for example an application created using expo.io.
 
 ## Why Not Use This?
+
 You are not restricted from using native code, and can find a better module to use.
 
 ## Installation
+
 `npm install --save react-native-audio-player-recorder-no-linking`
 
 ## Usage
+
 `import {Recorder, Player} from 'react-native-audio-player-recorder-no-linking';`
 
 ### Example
 
 #### Recorder
-~~~
+
+```javascript
  <Recorder
     style={{ flex: 1 }}
     onComplete={this.soundRecorderComplete.bind(this)}
@@ -35,12 +39,12 @@ You are not restricted from using native code, and can find a better module to u
     completeButtonText={'Finished'}
     showDebug={true}
 />
-~~~
+```
 
 This component accepts the following props:
 
 | Name                   | Type |  Default | Description |
-| ---------------------- | ---- | -------- | ----------- | 
+| ---------------------- | ---- | -------- | ----------- |
 | onComplete   | function |  none | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below) |
 | maxDurationMillis | number|  600000 (10 miniutes) | maximum length of the recording in milliseconds |
 | completeButtonText | string|  finished | text dsplayed on the button that executes the onComplete callback |
@@ -50,23 +54,25 @@ This component accepts the following props:
 | showDebug | boolean | false |shows debug related items in a view on the recorder screen |
 | showBackButton | boolean | true | show a button the user can press to execute the onComplete function |
 
-
 ### Sound Clip information returned by this component
+
 The onComplete callback receives an object similiar to the following
-~~~
+```javascript
 "size":115824,
 "modificationTime":1515107376,
 "uri":"file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540reggie3%252Freact-native-expo-sound-recorder/Audio/recording-20cfc766-faba-47cf-9914-8fc81b149012.m4a",
 "isDirectory":false,
 "exists":true,
 "durationMillis": 34535
-~~~
+```
 
 ### Default Audio Mode Object
+
 <pre>allowsRecordingIOS:true<br>interruptionModeIOS:<br>Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,<br>playsInSilentModeIOS: true,<br>playsInSilentLockedModeIOS: true,<br>shouldDuckAndroid: true,<br>interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX</pre>
 
 #### Player
-~~~
+
+```javascript
 <Player
     style={{ flex: 1 }}
     onComplete={this.playerComplete.bind(this)}
@@ -75,10 +81,10 @@ The onComplete callback receives an object similiar to the following
     showTimeStamp={true}
     showDebug={true}
 />
-~~~
+```
 
 | Name                   | Type |  Default | Description |
-| ---------------------- | ---- | -------- | ----------- | 
+| ---------------------- | ---- | -------- | ----------- |
 | onComplete   | function |  none | function called when user presses the complete button |
 | completeButtonText | string|  finished | The text that is dsplayed on the button that executes the onComplete callback |
 | timeStampStyle | object |  <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | Object containing the style of the timestamp text that is displayed while playing and recording |
@@ -87,12 +93,14 @@ The onComplete callback receives an object similiar to the following
 | showDebug | boolean | false |shows debug related items in a view on the recorder screen |
 | showBackButton | boolean | true | show a button the user can press to execute the onComplete function |
 
-
 ### Customize the UI
+
 The Record and Play buttons badges can be customized by altering the package's GetRecordButtonByStatus and GetPlayButtonByStatus files.  Both of these files return default components displayed by the Recorder and Player components, respectively.  The default UI components make use of the UI Kitten library for buttons and FontAwesome for icons.
 
 ## Changelog
-### 0.0.1 
+
+### 0.0.1
+
 * First released version with basic functionality
 * Replaces and expands upon react-native-sound-recorder-no-native package and library
 

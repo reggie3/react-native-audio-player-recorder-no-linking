@@ -3,7 +3,6 @@ import {View, StyleSheet} from 'react-native';
 import Slider from 'react-native-slider'
 
 const PlaybackSlider = (props) => {
-  debugger;
   return (
     <View style={sliderStyles.container}>
       <Slider

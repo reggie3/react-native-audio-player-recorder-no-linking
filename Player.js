@@ -222,13 +222,15 @@ export default class Player extends Component {
         ) : null}
 
         <View style={{ alignSelf: 'stretch' }}>
+        {this.props.showBackButton?
           <RkButton
             rkType="success stretch"
             style={{ marginVertical: 5 }}
             onPress={this.props.onComplete}
           >
             {this.props.completeButtonText}
-          </RkButton>
+          </RkButton>:
+          null}
 
           {this.props.showDebug ? (
             <ScrollView
@@ -252,13 +254,14 @@ export default class Player extends Component {
 }
 
 Player.propTypes = {
-  onComplete: PropTypes.func.isRequired,
+  onComplete: PropTypes.func,
   completeButtonText: PropTypes.string,
   audioMode: PropTypes.object,
   timeStampStyle: PropTypes.object,
   showTimeStamp: PropTypes.bool,
   showPlaybackSlider: PropTypes.bool,
-  showDebug: PropTypes.bool
+  showDebug: PropTypes.bool,
+  showBackButton: PropTypes.bool
 };
 
 Player.defaultProps = {
@@ -267,7 +270,8 @@ Player.defaultProps = {
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true,
   showPlaybackSlider: true,
-  showDebug: false
+  showDebug: false,
+  showBackButton: true
 };
 
 const styles = StyleSheet.create({

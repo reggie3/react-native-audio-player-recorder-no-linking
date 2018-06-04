@@ -41,13 +41,15 @@ This component accepts the following props:
 
 | Name                   | Type |  Default | Description |
 | ---------------------- | ---- | -------- | ----------- | 
-| onComplete (required)  | function |  none | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below) |
+| onComplete   | function |  none | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below) |
 | maxDurationMillis | number|  600000 (10 miniutes) | maximum length of the recording in milliseconds |
 | completeButtonText | string|  finished | text dsplayed on the button that executes the onComplete callback |
 | audioMode | object |  see below | a set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html) |
 | timeStampStyle | object |  <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | Object containing the style of the timestamp text that is displayed while playing and recording |
 | showTimeStamp | boolean | true |determines whether or not to display timestamp |
 | showDebug | boolean | false |shows debug related items in a view on the recorder screen |
+| showBackButton | boolean | true | show a button the user can press to execute the onComplete function |
+
 
 ### Sound Clip information returned by this component
 The onComplete callback receives an object similiar to the following
@@ -77,11 +79,13 @@ The onComplete callback receives an object similiar to the following
 
 | Name                   | Type |  Default | Description |
 | ---------------------- | ---- | -------- | ----------- | 
+| onComplete   | function |  none | function called when user presses the complete button |
 | completeButtonText | string|  finished | The text that is dsplayed on the button that executes the onComplete callback |
 | timeStampStyle | object |  <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | Object containing the style of the timestamp text that is displayed while playing and recording |
 | showTimeStamp | boolean | true |determines whether or not to display timestamp |
 | uri | string | none | URI location of the sound file to be played
 | showDebug | boolean | false |shows debug related items in a view on the recorder screen |
+| showBackButton | boolean | true | show a button the user can press to execute the onComplete function |
 
 
 ### Customize the UI

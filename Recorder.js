@@ -500,13 +500,14 @@ export default class Recorder extends Component {
           >
             Reset
           </RkButton>
+          {this.props.showBackButton?
           <RkButton
             rkType="success stretch"
             onPress={this.onComplete.bind(this)}
             style={{ marginVertical: 5 }}
           >
             {this.props.completeButtonText}
-          </RkButton>
+          </RkButton> : null}
           {this.props.showDebug ? (
             <ScrollView
               style={{
@@ -529,14 +530,15 @@ export default class Recorder extends Component {
 }
 
 Recorder.propTypes = {
-  onComplete: PropTypes.func.isRequired,
+  onComplete: PropTypes.func,
   maxDurationMillis: PropTypes.number,
   completeButtonText: PropTypes.string,
   audioMode: PropTypes.object,
   timeStampStyle: PropTypes.object,
   showTimeStamp: PropTypes.bool,
   showPlaybackSlider: PropTypes.bool,
-  showDebug: PropTypes.bool
+  showDebug: PropTypes.bool,
+  showBackButton: PropTypes.bool
 };
 
 Recorder.defaultProps = {
@@ -547,7 +549,8 @@ Recorder.defaultProps = {
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true,
   showPlaybackSlider: true,
-  showDebug: false
+  showDebug: false,
+  showBackButton: true
 };
 
 const styles = StyleSheet.create({

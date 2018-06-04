@@ -61,6 +61,7 @@ export default class App extends Component {
           maxDurationMillis={150000}
           completeButtonText={'Finished'}
           showDebug={true}
+          showBackButton={true}
         />
       </View>)
     }
@@ -78,6 +79,7 @@ export default class App extends Component {
           completeButtonText={'Return Home'}
           uri={AUDIO_CLIP_URL}
           showDebug={true}
+          showBackButton={true}
         />
       </View>
     )}

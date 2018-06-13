@@ -459,6 +459,7 @@ export default class Recorder extends Component {
   render() {
     return (
       <View style={styles.container}>
+      {this.props.showTimeStamp ? this.renderTimeStamp() : null}
         <GetRecordButtonByStatus
           onStartRecordingPress={this.onStartRecordingPress.bind(this)}
           onStopRecordingPress={this.onStopRecordingPress.bind(this)}
@@ -490,7 +491,7 @@ export default class Recorder extends Component {
           </View>
         ) : null}
 
-        {this.props.showTimeStamp ? this.renderTimeStamp() : null}
+        
 
         <View style={{ alignSelf: 'stretch' }}>
           <RkButton

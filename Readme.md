@@ -99,6 +99,10 @@ The Record and Play buttons badges can be customized by altering the package's G
 
 ## Changelog
 
+### 0.1.0
+
+* Updated UI
+
 ### 0.0.1
 
 * First released version with basic functionality

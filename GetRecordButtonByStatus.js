@@ -2,18 +2,23 @@ import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { RkButton } from 'react-native-ui-kitten';
 
-const roundButtonStyle = {
-  borderRadius: 50,
-  width: 100,
-  height: 100,
-  alignSelf: 'center'
+const buttonStyle = {
+  borderRadius: 5,
+  width: 64,
+  height: 64,
+  alignSelf: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
 };
+
+const ICON_SIZE= 48;
 
 const GetRecordButtonByStatus = (props) => {
   if (props.playStatus === 'PLAYING') {
     return (
-      <RkButton rkType="disabled" style={roundButtonStyle} onPress={() => {}}>
-        <FontAwesome name="microphone" color="white" size={75} />
+      <RkButton rkType="disabled" style={buttonStyle} onPress={() => {}}>
+        <FontAwesome name="microphone" color="white" size={ICON_SIZE} />
       </RkButton>
     );
   } else {
@@ -21,10 +26,10 @@ const GetRecordButtonByStatus = (props) => {
       return (
         <RkButton
           rkType="danger"
-          style={roundButtonStyle}
+          style={buttonStyle}
           onPress={props.onStopRecordingPress}
         >
-          <FontAwesome name="stop" color="white" size={65} />
+          <FontAwesome name="stop" color="white" size={ICON_SIZE} />
         </RkButton>
       );
     }
@@ -32,10 +37,10 @@ const GetRecordButtonByStatus = (props) => {
       return (
         <RkButton
         rkType='disabled'
-          style={roundButtonStyle}
+          style={buttonStyle}
           onPress={() => {}}
         >
-          <FontAwesome name="hourglass" color="white" size={65} />
+          <FontAwesome name="hourglass" color="white" size={ICON_SIZE} />
         </RkButton>
       );
     } else if (
@@ -45,22 +50,22 @@ const GetRecordButtonByStatus = (props) => {
     ) {
       return (<RkButton
         rkType="success"
-        style={roundButtonStyle}
+        style={buttonStyle}
         onPress={props.onStartRecordingPress}
       >
-        <FontAwesome name="microphone" color="white" size={75} />
+        <FontAwesome name="microphone" color="white" size={ICON_SIZE} />
       </RkButton>);
     } else if (props.recordStatus === 'ERROR') {
       return (
-        <RkButton rkType="danger" style={roundButtonStyle} onPress={() => {}}>
-          <FontAwesome name="exclamation-triangle" color="white" size={55} />
+        <RkButton rkType="danger" style={buttonStyle} onPress={() => {}}>
+          <FontAwesome name="exclamation-triangle" color="white" size={ICON_SIZE} />
         </RkButton>
       );
     } else {
         console.warn(`GetRecordButtonByStatus: unknown recordStatus ${props.recordStatus}`)
       return (
-        <RkButton rkType="danger" style={roundButtonStyle} onPress={() => {}}>
-          <FontAwesome name="question-circle" color="white" size={55} />
+        <RkButton rkType="danger" style={buttonStyle} onPress={() => {}}>
+          <FontAwesome name="question-circle" color="white" size={ICON_SIZE} />
         </RkButton>
       );
     }

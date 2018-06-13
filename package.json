@@ -1,0 +1,38 @@
+{
+  "main": "index.js",
+  "private": false,
+  "dependencies": {
+    "prop-types": "15.6.1",
+    "react-native-blink-view": "0.0.6",
+    "react-native-slider": "^0.11.0",
+    "react-native-ui-kitten": "^3.0.1"
+  },
+  "name": "react-native-audio-player-recorder-no-linking",
+  "version": "0.1.1",
+  "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-bump": "^3.1.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-json-editor": "^2.4.1",
+    "gulp-run": "^1.7.1"
+  },
+  "scripts": {
+    "prod": "npm run clean && SET NODE_ENV=PROD && webpack",
+    "dev": "npm run clean && SET NODE_ENV=DEV && webpack -p",
+    "clean": "rimraf ./dist",
+    "test": "jest",
+    "test-watch": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reggie3/react-native-audio-player-recorder-no-linking.git"
+  },
+  "keywords": ["react-native", "expo.io", "audio", "player", "recorder", "javascript"],
+  "author": "Reginald Johnson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking/issues"
+  },
+  "homepage": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking#readme"
+}

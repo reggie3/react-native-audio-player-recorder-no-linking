@@ -189,6 +189,15 @@ export default class Player extends Component {
   render() {
     return (
       <View style={styles.container}>
+      {this.props.showTimeStamp ? (
+          <PlayTimeStamp
+            playStatus={this.state.playStatus}
+            sound={this.sound}
+            positionMillis={this.state.positionMillis}
+            durationMillis={this.state.durationMillis}
+            timeStampStyle={this.props.timeStampStyle}
+          />
+        ) : null}
         <GetPlayButtonByStatus
           playStatus={this.state.playStatus}
           onPlayPress={this.onPlayPress.bind(this)}
@@ -210,15 +219,6 @@ export default class Player extends Component {
               value={this.state.currentSliderValue}
             />
           </View>
-        ) : null}
-        {this.props.showTimeStamp ? (
-          <PlayTimeStamp
-            playStatus={this.state.playStatus}
-            sound={this.sound}
-            positionMillis={this.state.positionMillis}
-            durationMillis={this.state.durationMillis}
-            timeStampStyle={this.props.timeStampStyle}
-          />
         ) : null}
 
         <View style={{ alignSelf: 'stretch' }}>
@@ -266,7 +266,7 @@ Player.propTypes = {
 
 Player.defaultProps = {
   audioMode: defaultProps.audioMode,
-  completeButtonText: defaultProps.completeButtonText,
+  completeButtonText: 'Finished',
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true,
   showPlaybackSlider: true,

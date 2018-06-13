@@ -4,8 +4,8 @@ import { RkButton, RkTheme } from 'react-native-ui-kitten';
 
 const roundButtonStyle = {
   borderRadius: 50,
-  width: 100,
-  height: 100,
+  width: 75,
+  height: 75,
   alignSelf: 'center'
 };
 

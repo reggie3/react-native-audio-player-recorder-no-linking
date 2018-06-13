@@ -498,7 +498,7 @@ export default class Recorder extends Component {
             onPress={this.onReset.bind(this)}
             style={{ marginVertical: 5 }}
           >
-            Reset
+            {this.props.resetButtonText}
           </RkButton>
           {this.props.showBackButton?
           <RkButton
@@ -533,6 +533,7 @@ Recorder.propTypes = {
   onComplete: PropTypes.func,
   maxDurationMillis: PropTypes.number,
   completeButtonText: PropTypes.string,
+  resetButtonText: PropTypes.string,
   audioMode: PropTypes.object,
   timeStampStyle: PropTypes.object,
   showTimeStamp: PropTypes.bool,
@@ -543,14 +544,16 @@ Recorder.propTypes = {
 
 Recorder.defaultProps = {
   audioMode: defaultProps.audioMode,
-  completeButtonText: defaultProps.completeButtonText,
+  completeButtonText: 'Finished',
+  resetButtonText: 'Reset',
   prepareToRecordParams: defaultProps.prepareToRecordParams,
   maxDurationMillis: 600000,
   timeStampStyle: defaultProps.timeStampStyle,
   showTimeStamp: true,
   showPlaybackSlider: true,
   showDebug: false,
-  showBackButton: true
+  showBackButton: true,
+  
 };
 
 const styles = StyleSheet.create({

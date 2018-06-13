@@ -25,11 +25,6 @@ export default class App extends Component {
   };
 
   recorderComplete = (soundFileInfo) => {
-    soundFileInfo =
-      typeof soundFileInfo === 'object'
-        ? JSON.stringify(soundFileInfo, undefined, 2)
-        : soundFileInfo;
-
     this.setState({
       viewToShow: 'home',
       soundFileInfo

@@ -34,9 +34,7 @@ export default class Recorder extends Component {
     this.state = {
       ...initialState
     };
-    this.recordingSettings = JSON.parse(
-      JSON.stringify(Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY)
-    );
+    this.recordingSettings = Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY;
   }
 
   componentDidMount() {

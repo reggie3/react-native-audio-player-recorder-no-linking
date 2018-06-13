@@ -8,7 +8,7 @@
     "react-native-ui-kitten": "^3.0.1"
   },
   "name": "react-native-audio-player-recorder-no-linking",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
   "devDependencies": {
     "gulp": "^4.0.0",

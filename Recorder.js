@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { RkButton } from 'react-native-ui-kitten';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import { Button, Text } from 'native-base';
 import { Audio, FileSystem, Permissions } from 'expo';
 import PropTypes from 'prop-types';
-import * as defaultProps from './defaults';
 import PlaybackSlider from './PlaybackSlider';
 import PlayTimeStamp from './PlayTimeStamp';
 import RecordTimeStamp from './RecordTimeStamp';
@@ -34,7 +33,6 @@ export default class Recorder extends Component {
     this.state = {
       ...initialState
     };
-    this.recordingSettings = Audio.RECORDING_OPTIONS_PRESET_LOW_QUALITY;
   }
 
   componentDidMount() {
@@ -43,7 +41,6 @@ export default class Recorder extends Component {
     this.componentIsMounted = true;
   }
   componentWillUnmount = () => {
-    this.setState({ ...initialState });
     if (this.sound) {
       this.sound.setOnPlaybackStatusUpdate(null);
     }
@@ -178,7 +175,7 @@ export default class Recorder extends Component {
 
       // await recording.setProgressUpdateInterval(100);
 
-       await recording.startAsync();
+      await recording.startAsync();
 
       this.setState({
         recordStatus: 'RECORDING',
@@ -186,7 +183,7 @@ export default class Recorder extends Component {
       });
       this.recording = recording;
     } catch (error) {
-      console.log(`Error: startAsync: ${error}`);
+      if (error.includes) console.log(`Error: startAsync: ${error}`);
       this.addDebugStatement(`Error: startAsync: ${error}`);
       this.setState({ recordStatus: 'ERROR' });
     }
@@ -244,7 +241,7 @@ export default class Recorder extends Component {
     // now that recording is complete, create and load a new sound object
     // to save to component state so that it can be played back later
     try {
-      const { sound, status } = await this.recording.createNewLoadedSound(
+      const { sound, status } = await this.recording.createNewLoadedSoundAsync(
         null,
         this.onPlaybackStatusUpdate
       );
@@ -457,7 +454,7 @@ export default class Recorder extends Component {
   render() {
     return (
       <View style={styles.container}>
-      {this.props.showTimeStamp ? this.renderTimeStamp() : null}
+        {this.props.showTimeStamp ? this.renderTimeStamp() : null}
         <GetRecordButtonByStatus
           onStartRecordingPress={this.onStartRecordingPress.bind(this)}
           onStopRecordingPress={this.onStopRecordingPress.bind(this)}
@@ -485,28 +482,31 @@ export default class Recorder extends Component {
               onValueChange={this.onSliderValueChange}
               value={this.state.currentSliderValue}
               width={this.progressBarWidth}
+              sliderStyle={this.props.sliderStyle}
+              thumbStyle={this.props.thumbStyle}
             />
           </View>
         ) : null}
 
-        
-
         <View style={{ alignSelf: 'stretch' }}>
-          <RkButton
-            rkType="danger stretch"
+          <Button
+            danger
+            block
             onPress={this.onReset.bind(this)}
             style={{ marginVertical: 5 }}
           >
-            {this.props.resetButtonText}
-          </RkButton>
-          {this.props.showBackButton?
-          <RkButton
-            rkType="success stretch"
-            onPress={this.onComplete.bind(this)}
-            style={{ marginVertical: 5 }}
-          >
-            {this.props.completeButtonText}
-          </RkButton> : null}
+            <Text>{this.props.resetButtonText}</Text>
+          </Button>
+          {this.props.showBackButton ? (
+            <Button
+              success
+              block
+              onPress={this.onComplete.bind(this)}
+              style={{ marginVertical: 5 }}
+            >
+              <Text>{this.props.completeButtonText}</Text>
+            </Button>
+          ) : null}
           {this.props.showDebug ? (
             <ScrollView
               style={{
@@ -538,21 +538,42 @@ Recorder.propTypes = {
   showTimeStamp: PropTypes.bool,
   showPlaybackSlider: PropTypes.bool,
   showDebug: PropTypes.bool,
-  showBackButton: PropTypes.bool
+  showBackButton: PropTypes.bool,
+  sliderProps: PropTypes.shape({
+    onSlidingComplete: PropTypes.function,
+    onValueChange: PropTypes.function,
+    minimumTrackTintColor: PropTypes.string,
+    maximumTrackTintColor: PropTypes.string,
+    thumbTintColor: PropTypes.string,
+    maximumTrackImage: PropTypes.string,
+    minimumTrackImage: PropTypes.string,
+    thumbImage: PropTypes.string,
+    trackImage: PropTypes.string
+  })
 };
 
 Recorder.defaultProps = {
-  audioMode: defaultProps.audioMode,
+  audioMode: {
+    allowsRecordingIOS: true,
+    interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+    playsInSilentModeIOS: true,
+    playsInSilentLockedModeIOS: true,
+    shouldDuckAndroid: true,
+    interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+    playThroughEarpieceAndroid: false
+  },
   completeButtonText: 'Finished',
   resetButtonText: 'Reset',
-  prepareToRecordParams: defaultProps.prepareToRecordParams,
-  maxDurationMillis: 600000,
-  timeStampStyle: defaultProps.timeStampStyle,
+  prepareToRecordParams: Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
+  maxDurationMillis: 60000,
+  timeStampStyle: {
+    color: 'white',
+    fontSize: 24
+  },
   showTimeStamp: true,
   showPlaybackSlider: true,
   showDebug: false,
   showBackButton: true,
-  
 };
 
 const styles = StyleSheet.create({

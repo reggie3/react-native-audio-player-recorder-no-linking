@@ -1,43 +1,33 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import Slider from 'react-native-slider'
+import { View, StyleSheet, Slider } from 'react-native';
 
 const PlaybackSlider = (props) => {
   return (
     <View style={sliderStyles.container}>
       <Slider
-        trackStyle={sliderStyles.track}
-        thumbStyle={sliderStyles.thumb}
-        minimumTrackTintColor="#ec4c46"
         minimimValue={0}
         maximumValue={props.maximumValue}
         value={props.value}
-        onSlidingComplete={props.onValueChange}
+        onSlidingComplete={props.onSlidingComplete}
+        onValueChange={props.onValueChange}
+        minimumTrackTintColor={props.minimumTrackTintColor}
+        maximumTrackTintColor={props.maximumTrackTintColor}
+        thumbTintColor={props.thumbTintColor}
+        maximumTrackImage={props.maximumTrackImage}
+        minimumTrackImage={props.minimumTrackImage}
+        thumbImage={props.thumbImage}
+        trackImage={props.trackImage}
       />
     </View>
   );
 };
-  
-  export default PlaybackSlider;
 
-  const sliderStyles = StyleSheet.create({
-    container: {
-      flex: 1,
-      marginLeft: 10,
-      marginRight: 10,
-      alignItems: 'stretch',
-      justifyContent: 'center'
-    },
-    track: {
-      height: 18,
-      borderRadius: 1,
-      backgroundColor: '#d5d8e8'
-    },
-    thumb: {
-      width: 20,
-      height: 30,
-      borderRadius: 1,
-      backgroundColor: '#838486'
-    }
-  });
-  
+export default PlaybackSlider;
+
+const sliderStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'stretch',
+    justifyContent: 'center'
+  }
+});

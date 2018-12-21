@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { RkButton } from 'react-native-ui-kitten';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import { Button, Text } from 'native-base';
 import { Audio } from 'expo';
 import PropTypes from 'prop-types';
-import * as defaultProps from './defaults';
 import PlayTimeStamp from './PlayTimeStamp';
 import PlaybackSlider from './PlaybackSlider';
 import GetPlayButtonByStatus from './GetPlayButtonByStatus';
@@ -189,7 +188,7 @@ export default class Player extends Component {
   render() {
     return (
       <View style={styles.container}>
-      {this.props.showTimeStamp ? (
+        {this.props.showTimeStamp ? (
           <PlayTimeStamp
             playStatus={this.state.playStatus}
             sound={this.sound}
@@ -217,20 +216,23 @@ export default class Player extends Component {
               maximumValue={this.state.maxSliderValue}
               onValueChange={this.onSliderValueChange}
               value={this.state.currentSliderValue}
+              sliderStyle={this.props.sliderStyle}
+              thumbStyle={this.props.thumbStyle}
             />
           </View>
         ) : null}
 
         <View style={{ alignSelf: 'stretch' }}>
-        {this.props.showBackButton?
-          <RkButton
-            rkType="success stretch"
-            style={{ marginVertical: 5 }}
-            onPress={this.props.onComplete}
-          >
-            {this.props.completeButtonText}
-          </RkButton>:
-          null}
+          {this.props.showBackButton ? (
+            <Button
+              success
+              block
+              style={{ marginVertical: 5 }}
+              onPress={this.props.onComplete}
+            >
+              <Text>{this.props.completeButtonText}</Text>
+            </Button>
+          ) : null}
 
           {this.props.showDebug ? (
             <ScrollView
@@ -261,17 +263,39 @@ Player.propTypes = {
   showTimeStamp: PropTypes.bool,
   showPlaybackSlider: PropTypes.bool,
   showDebug: PropTypes.bool,
-  showBackButton: PropTypes.bool
+  showBackButton: PropTypes.bool,
+  sliderProps: PropTypes.shape({
+    onSlidingComplete: PropTypes.function,
+    onValueChange: PropTypes.function,
+    minimumTrackTintColor: PropTypes.string,
+    maximumTrackTintColor: PropTypes.string,
+    thumbTintColor: PropTypes.string,
+    maximumTrackImage: PropTypes.string,
+    minimumTrackImage: PropTypes.string,
+    thumbImage: PropTypes.string,
+    trackImage: PropTypes.string
+  })
 };
 
 Player.defaultProps = {
-  audioMode: defaultProps.audioMode,
+  audioMode: {
+    allowsRecordingIOS: true,
+    interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+    playsInSilentModeIOS: true,
+    playsInSilentLockedModeIOS: true,
+    shouldDuckAndroid: true,
+    interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+    playThroughEarpieceAndroid: false
+  },
   completeButtonText: 'Finished',
-  timeStampStyle: defaultProps.timeStampStyle,
+  timeStampStyle: {
+    color: 'white',
+    fontSize: 24
+  },
   showTimeStamp: true,
   showPlaybackSlider: true,
   showDebug: false,
-  showBackButton: true
+  showBackButton: true,
 };
 
 const styles = StyleSheet.create({

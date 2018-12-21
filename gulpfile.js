@@ -9,8 +9,7 @@ const run = require('gulp-run');
 const npmDeps = {
     "prop-types": "15.6.1",
     "react-native-blink-view": "0.0.6",
-    "react-native-slider": "^0.11.0",
-    "react-native-ui-kitten": "^3.0.1",
+    "native-base": "2.8.0"
 };
 
 // additional dependencies for expo app
@@ -65,7 +64,7 @@ gulp.task('git-push', () => {
 });
 
 gulp.task('git-push-beta', () => {
-  return run('git push origin 5-with-sizable-icons').exec();
+  return run('git push origin beta').exec();
 });
 
 gulp.task('forExpo', (done) => {

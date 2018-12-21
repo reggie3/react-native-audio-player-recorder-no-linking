@@ -1,4 +1,4 @@
-import 'expo';
+// import 'expo';
 import Recorder from './Recorder';
 import Player from './Player';
 

@@ -34,10 +34,58 @@ You are not restricted from using native code, and can find a better module to u
 ```javascript
  <Recorder
     style={{ flex: 1 }}
-    onComplete={this.soundRecorderComplete.bind(this)}
+    onComplete={this.recorderComplete}
     maxDurationMillis={150000}
-    completeButtonText={'Finished'}
     showDebug={true}
+    showBackButton={true}
+    audioMode={{
+        allowsRecordingIOS: true,
+        interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+        playsInSilentModeIOS: true,
+        playsInSilentLockedModeIOS: true,
+        shouldDuckAndroid: true,
+        interruptionModeAndroid:
+        Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+        playThroughEarpieceAndroid: false
+    }}
+    resetButton={(renderProps) => {
+        return (
+        <Button
+            onPress={renderProps.onPress}
+            danger
+            block
+            style={{ marginVertical: 5 }}
+        >
+            <Text>Reset</Text>
+        </Button>
+        );
+    }}
+    recordingCompleteButton={(renderProps) => {
+        return (
+            <Button
+                onPress={renderProps.onPress}
+                block
+                success
+                style={{ marginVertical: 5 }}
+            >
+                <Text>Finish</Text>
+            </Button>
+            );
+    }}
+    playbackSlider={(renderProps) => {
+        console.log({'maximumValue: ': renderProps.maximumValue});
+        return (
+        <Slider
+            minimimValue={0}
+            maximumValue={renderProps.maximumValue}
+            onValueChange={renderProps.onSliderValueChange}
+            value={renderProps.value}
+            style={{
+            width: '100%'
+            }}
+        />
+        );
+    }}
 />
 ```
 
@@ -47,7 +95,6 @@ This component accepts the following props:
 | ---------------------- | ---- | -------- | ----------- |
 | onComplete   | function |  none | callback function executed when the user presses the finish recording button.  Is passed sound file information (see below) |
 | maxDurationMillis | number|  600000 (10 miniutes) | maximum length of the recording in milliseconds |
-| completeButtonText | string|  finished | text dsplayed on the button that executes the onComplete callback |
 | audioMode | object |  see below | a set of key value pairs used to customize recording see [Expo documentation](https://docs.expo.io/versions/latest/sdk/audio.html) |
 | timeStampStyle | object |  <pre>{<br>color: 'blue',<br>fontSize: 40<br>}</pre> | Object containing the style of the timestamp text that is displayed while playing and recording |
 | showTimeStamp | boolean | true |determines whether or not to display timestamp |
@@ -73,13 +120,27 @@ The onComplete callback receives an object similiar to the following
 #### Player
 
 ```javascript
-<Player
+ <Player
     style={{ flex: 1 }}
     onComplete={this.playerComplete.bind(this)}
     completeButtonText={'Return Home'}
     uri={AUDIO_CLIP_URL}
-    showTimeStamp={true}
     showDebug={true}
+    showBackButton={true}
+    playbackSlider={(renderProps) => {
+        console.log({'maximumValue: ': renderProps.maximumValue});
+        return (
+        <Slider
+            minimimValue={0}
+            maximumValue={renderProps.maximumValue}
+            onValueChange={renderProps.onSliderValueChange}
+            value={renderProps.value}
+            style={{
+            width: '100%'
+            }}
+        />
+        );
+    }}
 />
 ```
 
@@ -98,6 +159,10 @@ The onComplete callback receives an object similiar to the following
 The Record and Play buttons badges can be customized by altering the package's GetRecordButtonByStatus and GetPlayButtonByStatus files.  Both of these files return default components displayed by the Recorder and Player components, respectively.  The default UI components make use of the UI Kitten library for buttons and FontAwesome for icons.
 
 ## Changelog
+
+### 1.0.0
+
+* User can pass controls for the playback slider, finish & reset buttons as render props.
 
 ### 0.1.0
 

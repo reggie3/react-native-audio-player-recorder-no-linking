@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import { Button, Text } from 'native-base';
+import { Text } from 'native-base';
 import { Audio, FileSystem, Permissions } from 'expo';
 import PropTypes from 'prop-types';
-import PlaybackSlider from './PlaybackSlider';
 import PlayTimeStamp from './PlayTimeStamp';
 import RecordTimeStamp from './RecordTimeStamp';
 import GetPlayButtonByStatus from './GetPlayButtonByStatus';
@@ -474,39 +473,30 @@ export default class Recorder extends Component {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              margin: 5
+              margin: 5,
+              width:'100%'
             }}
+            
           >
-            <PlaybackSlider
-              maximumValue={this.state.maxSliderValue}
-              onValueChange={this.onSliderValueChange}
-              value={this.state.currentSliderValue}
-              width={this.progressBarWidth}
-              sliderStyle={this.props.sliderStyle}
-              thumbStyle={this.props.thumbStyle}
-            />
+            {this.props.playbackSlider({
+              maximumValue: this.state.maxSliderValue,
+              onValueChange: this.onSliderValueChange,
+              value: this.state.currentSliderValue,
+              onSlidingComplete: this.onSlidingComplete,
+            })}
+            
           </View>
         ) : null}
 
         <View style={{ alignSelf: 'stretch' }}>
-          <Button
-            danger
-            block
-            onPress={this.onReset.bind(this)}
-            style={{ marginVertical: 5 }}
-          >
-            <Text>{this.props.resetButtonText}</Text>
-          </Button>
-          {this.props.showBackButton ? (
-            <Button
-              success
-              block
-              onPress={this.onComplete.bind(this)}
-              style={{ marginVertical: 5 }}
-            >
-              <Text>{this.props.completeButtonText}</Text>
-            </Button>
-          ) : null}
+          {this.props.resetButton({
+            onPress: this.onReset
+          })}
+          {this.props.showBackButton
+            ? this.props.recordingCompleteButton({
+                onPress: this.onComplete
+              })
+            : null}
           {this.props.showDebug ? (
             <ScrollView
               style={{
@@ -531,25 +521,15 @@ export default class Recorder extends Component {
 Recorder.propTypes = {
   onComplete: PropTypes.func,
   maxDurationMillis: PropTypes.number,
-  completeButtonText: PropTypes.string,
-  resetButtonText: PropTypes.string,
   audioMode: PropTypes.object,
   timeStampStyle: PropTypes.object,
   showTimeStamp: PropTypes.bool,
   showPlaybackSlider: PropTypes.bool,
   showDebug: PropTypes.bool,
   showBackButton: PropTypes.bool,
-  sliderProps: PropTypes.shape({
-    onSlidingComplete: PropTypes.function,
-    onValueChange: PropTypes.function,
-    minimumTrackTintColor: PropTypes.string,
-    maximumTrackTintColor: PropTypes.string,
-    thumbTintColor: PropTypes.string,
-    maximumTrackImage: PropTypes.string,
-    minimumTrackImage: PropTypes.string,
-    thumbImage: PropTypes.string,
-    trackImage: PropTypes.string
-  })
+  resetButton: PropTypes.func,
+  recordingCompleteButton: PropTypes.func,
+  playbackSlider: PropTypes.func
 };
 
 Recorder.defaultProps = {
@@ -562,8 +542,6 @@ Recorder.defaultProps = {
     interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
     playThroughEarpieceAndroid: false
   },
-  completeButtonText: 'Finished',
-  resetButtonText: 'Reset',
   prepareToRecordParams: Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY,
   maxDurationMillis: 60000,
   timeStampStyle: {
@@ -573,7 +551,7 @@ Recorder.defaultProps = {
   showTimeStamp: true,
   showPlaybackSlider: true,
   showDebug: false,
-  showBackButton: true,
+  showBackButton: true
 };
 
 const styles = StyleSheet.create({

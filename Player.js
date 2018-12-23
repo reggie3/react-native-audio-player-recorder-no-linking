@@ -209,16 +209,24 @@ export default class Player extends Component {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              margin: 5
+              margin: 5,
+              width:'100%'
+
             }}
           >
-            <PlaybackSlider
+           {this.props.playbackSlider({
+              maximumValue: this.state.maxSliderValue,
+              onValueChange: this.onSliderValueChange,
+              value: this.state.currentSliderValue,
+              onSlidingComplete: this.onSlidingComplete,
+            })}
+            {/* <PlaybackSlider
               maximumValue={this.state.maxSliderValue}
               onValueChange={this.onSliderValueChange}
               value={this.state.currentSliderValue}
               sliderStyle={this.props.sliderStyle}
               thumbStyle={this.props.thumbStyle}
-            />
+            /> */}
           </View>
         ) : null}
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Slider } from 'react-native';
 import Recorder from './Recorder';
 import Player from './Player';
 import { Constants, Font, AppLoading, Audio } from 'expo';
@@ -36,9 +36,10 @@ export default class App extends Component {
   };
 
   recorderComplete = (soundFileInfo) => {
+    console.log('In app: ', { soundFileInfo });
     this.setState({
       viewToShow: 'HOME',
-      soundFileInfo
+      soundFileInfo: JSON.stringify(soundFileInfo)
     });
   };
 
@@ -64,9 +65,8 @@ export default class App extends Component {
           <Text>Sound Recorder</Text>
           <Recorder
             style={{ flex: 1 }}
-            onComplete={this.recorderComplete.bind(this)}
+            onComplete={this.recorderComplete}
             maxDurationMillis={150000}
-            completeButtonText={'Finished'}
             showDebug={true}
             showBackButton={true}
             audioMode={{
@@ -78,6 +78,44 @@ export default class App extends Component {
               interruptionModeAndroid:
                 Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
               playThroughEarpieceAndroid: false
+            }}
+            resetButton={(renderProps) => {
+              return (
+                <Button
+                  onPress={renderProps.onPress}
+                  danger
+                  block
+                  style={{ marginVertical: 5 }}
+                >
+                  <Text>Reset</Text>
+                </Button>
+              );
+            }}
+            recordingCompleteButton={(renderProps) => {
+              return (
+                <Button
+                  onPress={renderProps.onPress}
+                  block
+                  success
+                  style={{ marginVertical: 5 }}
+                >
+                  <Text>Finish</Text>
+                </Button>
+              );
+            }}
+            playbackSlider={(renderProps) => {
+              console.log({'maximumValue: ': renderProps.maximumValue});
+              return (
+                <Slider
+                  minimimValue={0}
+                  maximumValue={renderProps.maximumValue}
+                  onValueChange={renderProps.onSliderValueChange}
+                  value={renderProps.value}
+                  style={{
+                    width: '100%'
+                  }}
+                />
+              );
             }}
           />
         </View>
@@ -98,6 +136,20 @@ export default class App extends Component {
             uri={AUDIO_CLIP_URL}
             showDebug={true}
             showBackButton={true}
+            playbackSlider={(renderProps) => {
+              console.log({'maximumValue: ': renderProps.maximumValue});
+              return (
+                <Slider
+                  minimimValue={0}
+                  maximumValue={renderProps.maximumValue}
+                  onValueChange={renderProps.onSliderValueChange}
+                  value={renderProps.value}
+                  style={{
+                    width: '100%'
+                  }}
+                />
+              );
+            }}
           />
         </View>
       );
@@ -165,7 +217,7 @@ export default class App extends Component {
               backgroundColor: 'lightblue',
               padding: 5,
               display: 'flex',
-              flex: 1
+              flex: 2
             }}
           >
             {this.renderScreen()}

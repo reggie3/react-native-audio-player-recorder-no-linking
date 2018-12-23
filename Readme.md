@@ -128,7 +128,6 @@ The onComplete callback receives an object similiar to the following
     showDebug={true}
     showBackButton={true}
     playbackSlider={(renderProps) => {
-        console.log({'maximumValue: ': renderProps.maximumValue});
         return (
         <Slider
             minimimValue={0}

@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Slider } from 'react-native';
 import Recorder from './Recorder';
 import Player from './Player';
-import { Constants, Font, AppLoading, Audio } from 'expo';
+import Constants from 'expo-constants';
+import * as Font from 'expo-font';
+import { Audio } from 'expo-av';
+import { AppLoading } from 'expo';
 import { Button, Text } from 'native-base';
 // "http://res.cloudinary.com/tourystory/video/upload/v1516221224/audioclips/eaffcf76b6cbf5032634150b69286ccab489e66040b0508d81f2ce0478a41036-a987f707-552d-eeea-baea-2b1731b429a0.mp4");
 

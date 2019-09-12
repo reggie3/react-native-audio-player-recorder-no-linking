@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Button, Text } from 'native-base';
-import { Audio } from 'expo';
+import { Audio } from 'expo-av';
 import PropTypes from 'prop-types';
 import PlayTimeStamp from './PlayTimeStamp';
 import PlaybackSlider from './PlaybackSlider';

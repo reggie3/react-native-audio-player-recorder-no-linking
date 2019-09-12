@@ -31,7 +31,7 @@ const PlaybackTimeStamp = (props) => {
     return '';
   };
 
-  /* 
+  /*
     the 'call' statements below binds 'this' to the Player class
     I used this technique vice pulling out the relevant functions becasue
     I  knew that would work, and didn't want to incur risk by

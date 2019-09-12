@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from 'native-base';
-import { Audio, FileSystem, Permissions } from 'expo';
+import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
 import PropTypes from 'prop-types';
 import PlayTimeStamp from './PlayTimeStamp';
 import RecordTimeStamp from './RecordTimeStamp';
@@ -476,7 +478,7 @@ export default class Recorder extends Component {
               margin: 5,
               width:'100%'
             }}
-            
+
           >
             {this.props.playbackSlider({
               maximumValue: this.state.maxSliderValue,
@@ -484,7 +486,7 @@ export default class Recorder extends Component {
               value: this.state.currentSliderValue,
               onSlidingComplete: this.onSlidingComplete,
             })}
-            
+
           </View>
         ) : null}
 

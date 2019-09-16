@@ -7,7 +7,7 @@
   "dependencies": {
     "prop-types": "15.6.1",
     "react-native-blink-view": "0.0.6",
-    "native-base": "2.8.0"
+    "native-base": "^2.13.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

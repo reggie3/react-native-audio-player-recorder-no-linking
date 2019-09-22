@@ -41,6 +41,7 @@ You are not restricted from using native code, and can find a better module to u
     audioMode={{
         allowsRecordingIOS: true,
         interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+        staysActiveInBackground: false,
         playsInSilentModeIOS: true,
         playsInSilentLockedModeIOS: true,
         shouldDuckAndroid: true,

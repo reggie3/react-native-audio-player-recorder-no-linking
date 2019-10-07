@@ -381,6 +381,7 @@ export default class Recorder extends Component {
 
   onStartRecordingPress = () => {
     this.stopPlaybackAndBeginRecording();
+    this.props.onBeginRecording();
   };
 
   onStopRecordingPress = () => {
@@ -462,6 +463,8 @@ export default class Recorder extends Component {
           recordStatus={this.state.recordStatus}
           playStatus={this.state.playStatus}
         />
+
+        <View style={{height:20}}/>
 
         <GetPlayButtonByStatus
           recordStatus={this.state.recordStatus}
@@ -559,8 +562,10 @@ Recorder.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+    alignItems: "flex-start",
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   }
 });

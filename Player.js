@@ -197,11 +197,7 @@ export default class Player extends Component {
             timeStampStyle={this.props.timeStampStyle}
           />
         ) : null}
-        <GetPlayButtonByStatus
-          playStatus={this.state.playStatus}
-          onPlayPress={this.onPlayPress.bind(this)}
-          onPausePress={this.onPausePress.bind(this)}
-        />
+        
 
         {this.props.showPlaybackSlider ? (
           <View
@@ -229,6 +225,11 @@ export default class Player extends Component {
             /> */}
           </View>
         ) : null}
+        <GetPlayButtonByStatus
+          playStatus={this.state.playStatus}
+          onPlayPress={this.onPlayPress.bind(this)}
+          onPausePress={this.onPausePress.bind(this)}
+        />
 
         <View style={{ alignSelf: 'stretch' }}>
           {this.props.showBackButton ? (

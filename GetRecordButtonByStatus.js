@@ -2,12 +2,12 @@ import React from 'react';
 import { Button, Icon } from 'native-base';
 
 const buttonStyle = {
-  width: 64,
-  height: 64,
+  width: 72,
+  height: 72,
   alignSelf: 'center',
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center'
+  alignItems: 'center',
 };
 
 const ICON_SIZE = 40;
@@ -15,7 +15,7 @@ const ICON_SIZE = 40;
 const GetRecordButtonByStatus = (props) => {
   if (props.playStatus === 'PLAYING') {
     return (
-      <Button disabled style={buttonStyle} onPress={() => {}}>
+      <Button rounded disabled style={buttonStyle} onPress={() => {}}>
         <Icon
           type="FontAwesome"
           name="microphone"
@@ -27,7 +27,7 @@ const GetRecordButtonByStatus = (props) => {
   } else {
     if (props.recordStatus === 'RECORDING') {
       return (
-        <Button danger style={buttonStyle} onPress={props.onStopRecordingPress}>
+        <Button rounded danger style={buttonStyle} onPress={props.onStopRecordingPress}>
           <Icon
             type="FontAwesome"
             name="stop"
@@ -39,7 +39,7 @@ const GetRecordButtonByStatus = (props) => {
     }
     if (props.playStatus === 'BUFFERING' || props.playStatus === 'LOADING') {
       return (
-        <Button disabled style={buttonStyle} onPress={() => {}}>
+        <Button rounded warning style={buttonStyle} onPress={() => {}}>
           <Icon
             type="FontAwesome"
             name="hourglass"
@@ -55,7 +55,8 @@ const GetRecordButtonByStatus = (props) => {
     ) {
       return (
         <Button
-          success
+          rounded
+          danger
           style={buttonStyle}
           onPress={props.onStartRecordingPress}
         >
@@ -69,7 +70,7 @@ const GetRecordButtonByStatus = (props) => {
       );
     } else if (props.recordStatus === 'ERROR') {
       return (
-        <Button danger style={buttonStyle} onPress={() => {}}>
+        <Button rounded warning style={buttonStyle} onPress={() => {}}>
           <Icon
             type="FontAwesome"
             name="exclamation-triangle"
@@ -83,7 +84,7 @@ const GetRecordButtonByStatus = (props) => {
         `GetRecordButtonByStatus: unknown recordStatus ${props.recordStatus}`
       );
       return (
-        <Button danger style={buttonStyle} onPress={() => {}}>
+        <Button rounded warning style={buttonStyle} onPress={() => {}}>
           <Icon
             type="FontAwesome"
             name="question-circle"

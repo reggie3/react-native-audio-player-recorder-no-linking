@@ -66,7 +66,7 @@ export default class Player extends Component {
 
   componentWillUnmount = () => {
     this.setState({ ...initialState });
-    this.sound.setOnPlaybackStatusUpdate(null);
+    if(this.sound != null) this.sound.setOnPlaybackStatusUpdate(null);
   };
   /*
   Function used to update the UI during playback

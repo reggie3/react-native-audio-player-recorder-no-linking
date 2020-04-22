@@ -1,14 +1,46 @@
 {
-  "main": "index.js",
-  "private": false,
-  "name": "react-native-audio-player-recorder-no-linking",
-  "version": "1.0.1",
-  "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
-  "dependencies": {
-    "prop-types": "15.6.1",
-    "react-native-blink-view": "0.0.6",
-    "native-base": "2.8.0"
+  "_args": [
+    [
+      "github:zaptrem/react-native-audio-player-recorder-no-linking",
+      "/Users/ryantremblay/Test2/ReLearnApp"
+    ]
+  ],
+  "_from": "github:zaptrem/react-native-audio-player-recorder-no-linking",
+  "_id": "react-native-audio-player-recorder-no-linking@github:zaptrem/react-native-audio-player-recorder-no-linking#5e8f1f82c38483eace8d8d6a048a75b45311b64b",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/react-native-audio-player-recorder-no-linking",
+  "_phantomChildren": {
+    "fbjs": "0.8.17",
+    "loose-envify": "1.4.0",
+    "object-assign": "4.1.1"
   },
+  "_requested": {
+    "type": "git",
+    "raw": "github:zaptrem/react-native-audio-player-recorder-no-linking",
+    "rawSpec": "github:zaptrem/react-native-audio-player-recorder-no-linking",
+    "saveSpec": "github:zaptrem/react-native-audio-player-recorder-no-linking",
+    "fetchSpec": null,
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "github:zaptrem/react-native-audio-player-recorder-no-linking#5e8f1f82c38483eace8d8d6a048a75b45311b64b",
+  "_spec": "github:zaptrem/react-native-audio-player-recorder-no-linking",
+  "_where": "/Users/ryantremblay/Test2/ReLearnApp",
+  "author": {
+    "name": "Reginald Johnson"
+  },
+  "bugs": {
+    "url": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking/issues"
+  },
+  "dependencies": {
+    "native-base": "^2.13.0",
+    "prop-types": "15.6.1",
+    "react-native-blink-view": "0.0.6"
+  },
+  "description": "A simple react native sound recorder and player module suitable for dropping into expo.io and other react native applications.  It contains no native platform specific code.",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.3",
@@ -29,22 +61,29 @@
     "gulp-run": "^1.7.1",
     "regenerator-runtime": "^0.11.1"
   },
-  "scripts": {
-    "prod": "npm run clean && SET NODE_ENV=PROD && webpack",
-    "dev": "npm run clean && SET NODE_ENV=DEV && webpack -p",
-    "clean": "rimraf ./dist",
-    "test": "jest",
-    "test-watch": "jest --watch"
-  },
+  "homepage": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking#readme",
+  "keywords": [
+    "react-native",
+    "expo.io",
+    "audio",
+    "player",
+    "recorder",
+    "javascript"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "react-native-audio-player-recorder-no-linking",
+  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/reggie3/react-native-audio-player-recorder-no-linking.git"
   },
-  "keywords": ["react-native", "expo.io", "audio", "player", "recorder", "javascript"],
-  "author": "Reginald Johnson",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking/issues"
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "dev": "npm run clean && SET NODE_ENV=DEV && webpack -p",
+    "prod": "npm run clean && SET NODE_ENV=PROD && webpack",
+    "test": "jest",
+    "test-watch": "jest --watch"
   },
-  "homepage": "https://github.com/reggie3/react-native-audio-player-recorder-no-linking#readme"
+  "version": "1.0.1"
 }

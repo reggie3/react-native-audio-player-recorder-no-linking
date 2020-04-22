@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Button, Text } from 'native-base';
-import { Audio } from 'expo';
+import { Audio } from 'expo-av';
 import PropTypes from 'prop-types';
 import PlayTimeStamp from './PlayTimeStamp';
 import PlaybackSlider from './PlaybackSlider';
@@ -66,7 +66,7 @@ export default class Player extends Component {
 
   componentWillUnmount = () => {
     this.setState({ ...initialState });
-    this.sound.setOnPlaybackStatusUpdate(null);
+    if(this.sound != null) this.sound.setOnPlaybackStatusUpdate(null);
   };
   /*
   Function used to update the UI during playback
@@ -197,11 +197,7 @@ export default class Player extends Component {
             timeStampStyle={this.props.timeStampStyle}
           />
         ) : null}
-        <GetPlayButtonByStatus
-          playStatus={this.state.playStatus}
-          onPlayPress={this.onPlayPress.bind(this)}
-          onPausePress={this.onPausePress.bind(this)}
-        />
+        
 
         {this.props.showPlaybackSlider ? (
           <View
@@ -229,6 +225,11 @@ export default class Player extends Component {
             /> */}
           </View>
         ) : null}
+        <GetPlayButtonByStatus
+          playStatus={this.state.playStatus}
+          onPlayPress={this.onPlayPress.bind(this)}
+          onPausePress={this.onPausePress.bind(this)}
+        />
 
         <View style={{ alignSelf: 'stretch' }}>
           {this.props.showBackButton ? (

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import { Text } from 'native-base';
-import { Audio, FileSystem, Permissions } from 'expo';
+import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
 import PropTypes from 'prop-types';
 import PlayTimeStamp from './PlayTimeStamp';
 import RecordTimeStamp from './RecordTimeStamp';
@@ -379,6 +381,7 @@ export default class Recorder extends Component {
 
   onStartRecordingPress = () => {
     this.stopPlaybackAndBeginRecording();
+    this.props.onBeginRecording();
   };
 
   onStopRecordingPress = () => {
@@ -461,6 +464,8 @@ export default class Recorder extends Component {
           playStatus={this.state.playStatus}
         />
 
+        <View style={{height:20}}/>
+
         <GetPlayButtonByStatus
           recordStatus={this.state.recordStatus}
           playStatus={this.state.playStatus}
@@ -476,7 +481,7 @@ export default class Recorder extends Component {
               margin: 5,
               width:'100%'
             }}
-            
+
           >
             {this.props.playbackSlider({
               maximumValue: this.state.maxSliderValue,
@@ -484,7 +489,7 @@ export default class Recorder extends Component {
               value: this.state.currentSliderValue,
               onSlidingComplete: this.onSlidingComplete,
             })}
-            
+
           </View>
         ) : null}
 
@@ -557,8 +562,10 @@ Recorder.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+    alignItems: "flex-start",
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   }
 });
